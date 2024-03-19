@@ -8,6 +8,8 @@ import model.FileData;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
 public class MainController implements NewFileCallBack {
@@ -17,6 +19,8 @@ public class MainController implements NewFileCallBack {
        view =new MainView();
 
         ArrayList<JMenuItem>  menuOptions= view.getMenuOptions();
+
+
         for (JMenuItem item:menuOptions) {
             item.addActionListener(new ActionListener() {
                 @Override
@@ -26,6 +30,27 @@ public class MainController implements NewFileCallBack {
                 }
             });
         }
+
+      JPanel workspace=  view.getWorkspacePanel();
+        workspace.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+              System.out.println(e.getWheelRotation());
+              double scale=view.getScale();
+              if(e.getWheelRotation()<0){
+                  System.out.println("scroll down");
+              scale=scale-(1*0.01);
+              }else{
+                  scale=scale+(1*0.01);
+                  System.out.println("scroll in");
+              }
+
+              view.setScale(scale);
+            view.scale();
+            }
+        });
+
+
     }
 
 
@@ -42,6 +67,7 @@ public class MainController implements NewFileCallBack {
     public void onFileCreate(FileData data) {
 
         view.loadMaterial(data);
+view.refreshWindow();
     }
 
 

@@ -39,13 +39,21 @@ public class MainView {
 
     JPanel material ;
 
+    double scale=1;
+
+    private Dimension recalcMaterialSize(Dimension dim){
+        return new Dimension((int)(dim.width*scale), (int)(dim.height*scale));
+    }
 
     public MainView() {
 
         mainFrame = new ShownWindow();
         layeredPane = new JLayeredPane();
+
         workspacePanel = new JPanel();
         workspacePanel.setBackground(new Color(107, 107, 107));
+        workspacePanel.setLayout(null);
+
         leftPanel = new JPanel();
         rightSidePanel = new JPanel();
         upperPanel = new JPanel();
@@ -123,14 +131,58 @@ public class MainView {
         mainFrame.setVisible(true);
     }
 
+    public double getScale() {
+        return scale;
+    }
+
+    public JPanel getWorkspacePanel() {
+        return workspacePanel;
+    }
+
+    public void setWorkspacePanel(JPanel workspacePanel) {
+        this.workspacePanel = workspacePanel;
+    }
+
+    public JPanel getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(JPanel material) {
+        this.material = material;
+    }
+
+    public void setScale(double scale) {
+        this.scale = scale;
+    }
+
     public ArrayList<JMenuItem> getMenuOptions() {
         return menuOptions;
     }
 
     public void loadMaterial(FileData data){
-        material.setPreferredSize(new Dimension(((int)data.materialDim.getWidth()*10),
-                ((int)data.materialDim.getHeight()*10)));
+        Dimension materialDim=new Dimension(((int)data.materialDim.getWidth()*10), ((int)data.materialDim.getHeight()*10));
+        materialDim=this.recalcMaterialSize(materialDim);
+        material.setSize(materialDim);
+
+      int Width=  workspacePanel.getWidth()/2-(((int)data.materialDim.getWidth()*10)/2);
+        if(Width<0){
+            Width=0;
+        }
+
+        material.setLocation(Width,0);
+
       workspacePanel.add(material);
       mainFrame.setVisible(true);
     }
+
+    public void scale(){
+        Dimension dim=this.recalcMaterialSize(material.getSize());
+        material.setSize(dim);
+        mainFrame.setVisible(true);
+    }
+
+    public void refreshWindow(){
+        mainFrame.refresh();
+    }
+
 }
