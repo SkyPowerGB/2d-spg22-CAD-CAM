@@ -11,6 +11,8 @@ public class FileData {
 
     public DimensionDouble materialDim;
 
+    //velicina mm
+    public double unitSize;
 
 
 }

@@ -12,6 +12,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class MainView {
+
+    JPanel bottomPanel;
     ShownWindow mainFrame;
     JLayeredPane layeredPane;
     JPanel programPanel;
@@ -25,7 +27,8 @@ public class MainView {
     JScrollPane rightScrollPane;
     JScrollPane workspaceScrollPane;
 
-
+    JPanel drawnHeightLayer;
+    JPanel vectorLayer;
     LabeledInput speed;
     LabeledInput acceleration;
     LabeledInput zStep;
@@ -38,11 +41,17 @@ public class MainView {
     ArrayList<JMenuItem> menuOptions;
 
     JPanel material ;
+    Dimension materialOriginalDim;
 
+    JLabel scaleLbl;
     double scale=1;
 
-    private Dimension recalcMaterialSize(Dimension dim){
-        return new Dimension((int)(dim.width*scale), (int)(dim.height*scale));
+    private Dimension recalcMaterialSize(){
+        return new Dimension((int)(materialOriginalDim.width*scale), (int)(materialOriginalDim.height*scale));
+    }
+
+    public ArrayList<JButton> getToolBtns() {
+        return toolBtns;
     }
 
     public MainView() {
@@ -66,11 +75,27 @@ public class MainView {
         toolOptions = new JPanel();
         leftScrollPane = new JScrollPane();
 
+        vectorLayer=new JPanel();
+        vectorLayer.setLayout(null);
+
+        zStep=new LabeledInput();
+
+        zStep.input.setText("0.1");
+        zStep.label.setText("Z-resolution mm");
+
+
+        bottomPanel=new JPanel();
+        bottomPanel.setPreferredSize(new Dimension(mainFrame.getWidth(),50));
+
+        scaleLbl=new JLabel();
+        scaleLbl.setText(String.valueOf(scale));
+
          material = new JPanel();
          material.setBackground(Color.white);
 
         toolPanel.setLayout(new GridLayout(5,3,2,2));
         toolPanel.setBackground(null);
+
         for (ToolNamesE tool: ToolNamesE.values()) {
 
               JButton toolBtn= new JButton();
@@ -91,6 +116,8 @@ public class MainView {
             menuOptions.add(menuItem);
             menuItems.get(0).add(menuItem);
         }
+
+
 
 
         Dimension frameSize=mainFrame.getSize();
@@ -118,11 +145,15 @@ public class MainView {
         upperPanel.setPreferredSize(new Dimension(frameSize.width ,50));
 
 
+        bottomPanel.add(scaleLbl,BorderLayout.EAST);
+
 
         programPanel.add(leftPanel, BorderLayout.WEST);
         programPanel.add(rightSidePanel, BorderLayout.EAST);
         programPanel.add(upperPanel, BorderLayout.NORTH);
         programPanel.add(workspacePanel, BorderLayout.CENTER);
+        programPanel.add(bottomPanel,BorderLayout.SOUTH);
+
 
         layeredPane.add(programPanel, JLayeredPane.DEFAULT_LAYER);
 
@@ -139,20 +170,17 @@ public class MainView {
         return workspacePanel;
     }
 
-    public void setWorkspacePanel(JPanel workspacePanel) {
-        this.workspacePanel = workspacePanel;
-    }
-
     public JPanel getMaterial() {
         return material;
     }
 
-    public void setMaterial(JPanel material) {
-        this.material = material;
-    }
 
     public void setScale(double scale) {
         this.scale = scale;
+    }
+    public void setMaterialLoc(Point p){
+        material.setLocation(p);
+        mainFrame.refresh();
     }
 
     public ArrayList<JMenuItem> getMenuOptions() {
@@ -161,7 +189,8 @@ public class MainView {
 
     public void loadMaterial(FileData data){
         Dimension materialDim=new Dimension(((int)data.materialDim.getWidth()*10), ((int)data.materialDim.getHeight()*10));
-        materialDim=this.recalcMaterialSize(materialDim);
+        materialOriginalDim=materialDim;
+        materialDim=this.recalcMaterialSize();
         material.setSize(materialDim);
 
       int Width=  workspacePanel.getWidth()/2-(((int)data.materialDim.getWidth()*10)/2);
@@ -176,7 +205,8 @@ public class MainView {
     }
 
     public void scale(){
-        Dimension dim=this.recalcMaterialSize(material.getSize());
+        scaleLbl.setText(String.valueOf(scale));
+        Dimension dim=this.recalcMaterialSize();
         material.setSize(dim);
         mainFrame.setVisible(true);
     }
@@ -185,4 +215,5 @@ public class MainView {
         mainFrame.refresh();
     }
 
+    public Point getMaterialPos(){return material.getLocation();}
 }

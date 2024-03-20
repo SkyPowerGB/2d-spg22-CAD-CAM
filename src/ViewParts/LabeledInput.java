@@ -10,6 +10,9 @@ public class LabeledInput extends JPanel {
     public void setHorizontal(){this.setLayout(new GridLayout(1,2));}
 
   public  LabeledInput(){
+        label=new JLabel();
+        input=new JTextField();
+
         this.add(label);
         this.add(input);
   }
