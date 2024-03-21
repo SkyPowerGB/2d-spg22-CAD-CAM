@@ -12,12 +12,12 @@ public class TextBoard extends ScalablePanel {
     int fontSize;
 
     Point defLoc;
-    double scale;
+    double scale=1;
 
 
     public TextBoard(int i) {
         index = i;
-        this.setLocation(TextToDisplay.textLoc.get(i));
+
         this.fontSize = TextToDisplay.fonts.get(index).getSize();
 
         FontMetrics fm = getFontMetrics(TextToDisplay.fonts.get(index));
@@ -28,13 +28,13 @@ public class TextBoard extends ScalablePanel {
 
 
 
-
     }
 
 
     public void setDefaultLocation(Point p) {
 
         this.defLoc = p;
+
     }
 
     @Override

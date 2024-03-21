@@ -16,7 +16,7 @@ public class TextureHelper {
         ImageIcon image = new ImageIcon(imgPath);
         File file= new File(imgPath);
 
-        if(file.exists()){System.out.println(imgPath);}
+
         Image myImage = image.getImage();
         Image resized = myImage.getScaledInstance(size, size, Image.SCALE_FAST);
 

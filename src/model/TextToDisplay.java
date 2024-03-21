@@ -13,8 +13,12 @@ public class TextToDisplay {
     public static int addText(String txt,Font font){
         text.add(txt);
         fonts.add(font);
-        return text.indexOf(txt);
+        return text.size()-1;
     }
 
+public static int addTextLoc(Point p){
+        textLoc.add(p);
+        return textLoc.size()-1;
+}
 
 }

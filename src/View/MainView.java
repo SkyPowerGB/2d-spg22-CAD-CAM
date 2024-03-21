@@ -5,10 +5,12 @@ import helpers.TextureHelper;
 import helpers.enums.FileOptionsE;
 import helpers.enums.ToolNamesE;
 import helpers.enums.menuItemsE;
+import helpers.helperModels.Line;
 import model.FileData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 
@@ -175,7 +177,7 @@ public class MainView {
         return workspacePanel;
     }
 
-    public JPanel getMaterial() {
+    public ScalablePanel getMaterial() {
         return material;
     }
 
@@ -230,4 +232,12 @@ public class MainView {
         this.refreshWindow();
 
     }
+
+
+    public void getMaterialSpan(){
+        Point matP=material.getLocation();
+        Point matE=new Point(matP.x+material.getWidth(),matP.y+material.getHeight());
+
+    }
+
 }

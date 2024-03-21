@@ -1,5 +1,6 @@
 package controller;
 
+import View.DrawText;
 import View.MainView;
 import ViewParts.TextBoard;
 import controller.callbacks.AddTextCallback;
@@ -7,6 +8,7 @@ import controller.callbacks.NewFileCallBack;
 import helpers.ActiveBtns;
 import helpers.enums.FileOptionsE;
 import helpers.helperModels.Line;
+import helpers.helperModels.Span;
 import model.FileData;
 import model.TextToDisplay;
 
@@ -54,11 +56,11 @@ public class MainController implements NewFileCallBack, AddTextCallback {
                 int y = e.getY();
                 Point loc = new Point(x, y);
                 if (e.getWheelRotation() > 0) {
-                    System.out.println("zoomout");
+
                     scale(1, loc, false);
                 } else {
 
-                    System.out.println("zoomin");
+
                     scale(1, loc, true);
                 }
 
@@ -72,9 +74,18 @@ public class MainController implements NewFileCallBack, AddTextCallback {
             public void mouseClicked(MouseEvent e) {
                 if (ActiveBtns.text) {
 
-                    OpenTextForm(new Point(e.getX(), e.getY()));
+                    Point clickLoc=new Point(new Point((e.getX()) ,  e.getY()));
 
+
+                    Point offsetTxtLoc=Span.offsetPoint(clickLoc, view.getMaterial().getLocation());
+
+                    System.out.println("Click Loc-"+clickLoc.x+"/"+clickLoc.y);
+                    System.out.println(offsetTxtLoc.x+"/"+offsetTxtLoc.y);
+
+
+                    OpenTextForm(offsetTxtLoc);
                 }
+
             }
 
             @Override
@@ -116,7 +127,7 @@ public class MainController implements NewFileCallBack, AddTextCallback {
         workspace.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                System.out.println(e.getX());
+
                 if (middleButtonPressed) {
                     int currX = e.getX();
                     int currY = e.getY();
@@ -140,12 +151,13 @@ public class MainController implements NewFileCallBack, AddTextCallback {
     }
 
     private void menuOptionClicked(String name) {
-        System.out.println(name);
+
 
         if (name.contentEquals(FileOptionsE.new_file.toString())) {
             NewFileController controllerB = new NewFileController(this);
         }
     }
+
 
     public void scale(int factor, Point position, boolean dir) {
         double ammount = 0.1;
@@ -197,7 +209,6 @@ public class MainController implements NewFileCallBack, AddTextCallback {
             scale = scale - ammount;
         }
 
-        System.out.println(scale);
 
         int nexY = ln.calcY(nextX);
 
@@ -211,8 +222,9 @@ public class MainController implements NewFileCallBack, AddTextCallback {
     }
 
     public void OpenTextForm(Point p) {
-        DrawTextController drawText = new DrawTextController(this);
         TextToDisplay.textLoc.add(p);
+        DrawTextController drawText = new DrawTextController(this);
+
     }
 
     @Override
@@ -220,11 +232,12 @@ public class MainController implements NewFileCallBack, AddTextCallback {
 
         view.loadMaterial(data);
         view.refreshWindow();
+        addMaterialMouseListeners();
     }
 
     public void toolBtnPressed(JButton btn) {
 
-        System.out.println(btn.getName());
+
         switch (btn.getName()) {
             case "txt":
                 if (ActiveBtns.text) {
@@ -243,10 +256,18 @@ public class MainController implements NewFileCallBack, AddTextCallback {
     @Override
     public void AddText(int txtId) {
         TextBoard textBoard = new TextBoard(txtId);
+
         textBoard.setLocation(TextToDisplay.textLoc.get(txtId));
-        textBoard.setDefaultLocation(textBoard.getLocation());
+        textBoard.setDefaultLocation(TextToDisplay.textLoc.get(txtId));
+
         textBoard.setBackground(Color.ORANGE);
         view.materialAddJPanel(textBoard);
         view.refreshWindow();
+    }
+
+
+    private void addMaterialMouseListeners() {
+
+
     }
 }
