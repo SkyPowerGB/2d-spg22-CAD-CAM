@@ -1,39 +1,72 @@
 package ViewParts;
 
-import model.StuffToDraw;
+import model.FileData;
+import model.TextToDisplay;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.font.FontRenderContext;
 
-public class TextBoard extends JPanel {
+public class TextBoard extends ScalablePanel {
     int index;
     int fontSize;
 
-    public TextBoard(int i){
-        index=i;
-        this.setLocation(StuffToDraw.textLoc.get(i));
-        this.fontSize=StuffToDraw.fonts.get(index).getSize();
+    Point defLoc;
+    double scale;
+
+
+    public TextBoard(int i) {
+        index = i;
+        this.setLocation(TextToDisplay.textLoc.get(i));
+        this.fontSize = TextToDisplay.fonts.get(index).getSize();
+
+        FontMetrics fm = getFontMetrics(TextToDisplay.fonts.get(index));
+        int width = fm.stringWidth(TextToDisplay.text.get(i)) + 10;
+        int height = fm.getHeight() + 10;
+        setDefaultSize(new Dimension(width, height));
+        this.setSize(width, height);
+
+
+
+
     }
-    public void scale(double factor){
-        if(factor==1){
-            this.setLocation(StuffToDraw.textLoc.get(index));
-            this.fontSize=StuffToDraw.fonts.get(index).getSize();
-            return;
-        }
-        Point loc=this.getLocation();
-        int locNewX= (int) (loc.x*factor);
-        int locNewY= (int) (loc.y*factor);
-        this.setLocation(locNewX,locNewY);
-        this.fontSize= (int) (fontSize*factor);
+
+
+    public void setDefaultLocation(Point p) {
+
+        this.defLoc = p;
     }
 
     @Override
-    public void paintComponents(Graphics g) {
-        Graphics2D g2d= (Graphics2D)g;
+    public void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Font font=StuffToDraw.fonts.get(index);
-        Font font2=new Font(font.getFontName(),font.getStyle(),this.fontSize);
-        g2d.drawString(StuffToDraw.text.get(this.index),0,0);
-        super.paintComponents(g);
+
+        Font font = TextToDisplay.fonts.get(this.index);
+        Font font2 = new Font(font.getFontName(), font.getStyle(), (int) (font.getSize() * scale));
+
+
+        g2d.setFont(font2);
+        g2d.drawString(TextToDisplay.text.get(this.index), 0, font2.getSize());
+
+
     }
+
+    @Override
+    public void setScale(double scale) {
+        this.scale = scale;
+        super.setScale(scale);
+        repaint();
+        if (defLoc != null) {
+            this.setLocation((int) (defLoc.x * scale), (int) (defLoc.y * scale));
+        }
+
+
+
+
+    }
+
+
 }

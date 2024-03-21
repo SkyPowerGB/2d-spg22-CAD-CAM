@@ -1,23 +1,25 @@
 package controller;
 
 import View.MainView;
+import ViewParts.TextBoard;
+import controller.callbacks.AddTextCallback;
 import controller.callbacks.NewFileCallBack;
 import helpers.ActiveBtns;
 import helpers.enums.FileOptionsE;
 import helpers.helperModels.Line;
 import model.FileData;
+import model.TextToDisplay;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class MainController implements NewFileCallBack {
+public class MainController implements NewFileCallBack, AddTextCallback {
     MainView view;
     private boolean middleButtonPressed;
     private int prevX, prevY;
-    private int offsetX,offsetY;
+    private int offsetX, offsetY;
 
     public MainController() {
 
@@ -25,7 +27,7 @@ public class MainController implements NewFileCallBack {
 
         ArrayList<JMenuItem> menuOptions = view.getMenuOptions();
 
-        ArrayList<JButton> toolBtns=view.getToolBtns();
+        ArrayList<JButton> toolBtns = view.getToolBtns();
 
         for (JMenuItem item : menuOptions) {
             item.addActionListener(new ActionListener() {
@@ -37,27 +39,27 @@ public class MainController implements NewFileCallBack {
             });
         }
 
-        for (JButton btn : toolBtns){
-            btn.addActionListener(e->{ toolBtnPressed((JButton) e.getSource()); });
+        for (JButton btn : toolBtns) {
+            btn.addActionListener(e -> {
+                toolBtnPressed((JButton) e.getSource());
+            });
         }
-
-
 
         JPanel workspace = view.getWorkspacePanel();
 
         workspace.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                int x=e.getX();
-                int y=e.getY();
-                Point loc=new Point(x,y);
+                int x = e.getX();
+                int y = e.getY();
+                Point loc = new Point(x, y);
                 if (e.getWheelRotation() > 0) {
                     System.out.println("zoomout");
                     scale(1, loc, false);
                 } else {
 
                     System.out.println("zoomin");
-                    scale(1,loc, true);
+                    scale(1, loc, true);
                 }
 
             }
@@ -68,7 +70,11 @@ public class MainController implements NewFileCallBack {
         workspace.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (ActiveBtns.text) {
 
+                    OpenTextForm(new Point(e.getX(), e.getY()));
+
+                }
             }
 
             @Override
@@ -77,8 +83,8 @@ public class MainController implements NewFileCallBack {
                     middleButtonPressed = true;
                     prevX = e.getX();
                     prevY = e.getY();
-                  offsetX= view.getMaterialPos().x-prevX;
-                  offsetY=view.getMaterialPos().y-prevY;
+                    offsetX = view.getMaterialPos().x - prevX;
+                    offsetY = view.getMaterialPos().y - prevY;
 
                 }
 
@@ -91,10 +97,16 @@ public class MainController implements NewFileCallBack {
                     middleButtonPressed = false;
                 }
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
-
+                if (ActiveBtns.text) {
+                    view.getMaterial().setCursor(new Cursor(Cursor.TEXT_CURSOR));
+                } else {
+                    view.getMaterial().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                }
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
 
@@ -105,14 +117,14 @@ public class MainController implements NewFileCallBack {
             @Override
             public void mouseDragged(MouseEvent e) {
                 System.out.println(e.getX());
-                if(middleButtonPressed){
-                  int currX=e.getX();
-                  int currY=e.getY();
-                  int newPosX=offsetX+currX;
-                  int newPosY=offsetY+currY;
+                if (middleButtonPressed) {
+                    int currX = e.getX();
+                    int currY = e.getY();
+                    int newPosX = offsetX + currX;
+                    int newPosY = offsetY + currY;
 
-                  view.setMaterialLoc(new Point(newPosX,newPosY));
-                  view.refreshWindow();
+                    view.setMaterialLoc(new Point(newPosX, newPosY));
+                    view.refreshWindow();
 
                 }
                 super.mouseDragged(e);
@@ -125,9 +137,7 @@ public class MainController implements NewFileCallBack {
         });
 
 
-
     }
-
 
     private void menuOptionClicked(String name) {
         System.out.println(name);
@@ -137,69 +147,72 @@ public class MainController implements NewFileCallBack {
         }
     }
 
-
     public void scale(int factor, Point position, boolean dir) {
-        double ammount =0.1;
-        byte relation=0;
-        Point workspacePos=view.getMaterialPos();
-        if(workspacePos.x>position.x && workspacePos.y>position.y){
-            relation=1;
-        }else if(workspacePos.x>position.x && workspacePos.y<position.y){
-            relation=2;
-        }else if(workspacePos.x<position.x && workspacePos.y<position.y){
-            relation=3;
-        }else if(workspacePos.x<position.x && workspacePos.y>position.y){
-            relation=4;
+        double ammount = 0.1;
+        byte relation = 0;
+        Point workspacePos = view.getMaterialPos();
+        if (workspacePos.x > position.x && workspacePos.y > position.y) {
+            relation = 1;
+        } else if (workspacePos.x > position.x && workspacePos.y < position.y) {
+            relation = 2;
+        } else if (workspacePos.x < position.x && workspacePos.y < position.y) {
+            relation = 3;
+        } else if (workspacePos.x < position.x && workspacePos.y > position.y) {
+            relation = 4;
         }
 
         Line ln;
 
-        double moveX = view.getMaterial().getSize().getWidth() * (ammount/2);
+        double moveX = view.getMaterial().getSize().getWidth() * (ammount / 2);
 
         int nextX;
 
 
-
         Point materialPos = view.getMaterialPos();
 
-   if(relation==3||relation==4) {
-       ln = new Line(position, materialPos);
-   }else{
-       ln = new Line(materialPos, position);
-   }
+        if (relation == 3 || relation == 4) {
+            ln = new Line(position, materialPos);
+        } else {
+            ln = new Line(materialPos, position);
+        }
 
 
+        double scale = view.getScale();
 
-        double scale=view.getScale();
-
-        if(scale<=0.2){
-            scale=0.3;
+        if (scale <= 0.2) {
+            scale = 0.3;
 
             view.setScale(scale);
+
             view.scale();
             view.refreshWindow();
             return;
         }
 
         if (dir) {
-            nextX=(int)moveX+materialPos.x;
-             scale=scale+ammount;
-        }else{
-            nextX=materialPos.x-(int)moveX;
-            scale=scale-ammount;
+            nextX = (int) moveX + materialPos.x;
+            scale = scale + ammount;
+        } else {
+            nextX = materialPos.x - (int) moveX;
+            scale = scale - ammount;
         }
 
         System.out.println(scale);
 
-        int nexY=ln.calcY(nextX);
+        int nexY = ln.calcY(nextX);
 
-             Point newLoc=new Point(nextX,nexY);
-view.setMaterialLoc(newLoc);
-view.setScale(scale);
-view.scale();
-view.refreshWindow();
+        Point newLoc = new Point(nextX, nexY);
+        view.setMaterialLoc(newLoc);
+        view.setScale(scale);
+        view.scale();
+        view.refreshWindow();
 
 
+    }
+
+    public void OpenTextForm(Point p) {
+        DrawTextController drawText = new DrawTextController(this);
+        TextToDisplay.textLoc.add(p);
     }
 
     @Override
@@ -209,21 +222,31 @@ view.refreshWindow();
         view.refreshWindow();
     }
 
+    public void toolBtnPressed(JButton btn) {
 
-    public void toolBtnPressed(JButton btn){
+        System.out.println(btn.getName());
+        switch (btn.getName()) {
+            case "txt":
+                if (ActiveBtns.text) {
+                    ActiveBtns.text = false;
+                } else {
+                    ActiveBtns.text = true;
+                }
 
-            System.out.println(btn.getName());
-             switch(btn.getName()){
-                 case "txt":
-
-                     ActiveBtns.text=true;
-
-                     break;
+                break;
 
 
-             }
+        }
 
     }
 
-
+    @Override
+    public void AddText(int txtId) {
+        TextBoard textBoard = new TextBoard(txtId);
+        textBoard.setLocation(TextToDisplay.textLoc.get(txtId));
+        textBoard.setDefaultLocation(textBoard.getLocation());
+        textBoard.setBackground(Color.ORANGE);
+        view.materialAddJPanel(textBoard);
+        view.refreshWindow();
+    }
 }

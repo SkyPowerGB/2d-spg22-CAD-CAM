@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+
 public class MainView {
 
     JPanel bottomPanel;
@@ -40,15 +41,17 @@ public class MainView {
     ArrayList<JMenu> menuItems ;
     ArrayList<JMenuItem> menuOptions;
 
-    JPanel material ;
+
+    ScalablePanel material ;
     Dimension materialOriginalDim;
 
     JLabel scaleLbl;
     double scale=1;
 
-    private Dimension recalcMaterialSize(){
-        return new Dimension((int)(materialOriginalDim.width*scale), (int)(materialOriginalDim.height*scale));
-    }
+
+
+    ArrayList<ScalableLayeredPane> scalableLayeredPanes;
+    ArrayList<ScalablePanel> scalablePanels;
 
     public ArrayList<JButton> getToolBtns() {
         return toolBtns;
@@ -56,6 +59,7 @@ public class MainView {
 
     public MainView() {
 
+        scalablePanels=new ArrayList<>();
         mainFrame = new ShownWindow();
         layeredPane = new JLayeredPane();
 
@@ -90,8 +94,9 @@ public class MainView {
         scaleLbl=new JLabel();
         scaleLbl.setText(String.valueOf(scale));
 
-         material = new JPanel();
+         material = new ScalablePanel();
          material.setBackground(Color.white);
+         material.setLayout(null);
 
         toolPanel.setLayout(new GridLayout(5,3,2,2));
         toolPanel.setBackground(null);
@@ -190,8 +195,9 @@ public class MainView {
     public void loadMaterial(FileData data){
         Dimension materialDim=new Dimension(((int)data.materialDim.getWidth()*10), ((int)data.materialDim.getHeight()*10));
         materialOriginalDim=materialDim;
-        materialDim=this.recalcMaterialSize();
-        material.setSize(materialDim);
+
+        material.setDefaultSize(materialDim.width,materialDim.height);
+     material.setScale(scale);
 
       int Width=  workspacePanel.getWidth()/2-(((int)data.materialDim.getWidth()*10)/2);
         if(Width<0){
@@ -206,9 +212,11 @@ public class MainView {
 
     public void scale(){
         scaleLbl.setText(String.valueOf(scale));
-        Dimension dim=this.recalcMaterialSize();
-        material.setSize(dim);
+       material.setScale(scale);
         mainFrame.setVisible(true);
+        for (ScalablePanel comp:scalablePanels) {
+            comp.setScale(scale);
+        }
     }
 
     public void refreshWindow(){
@@ -216,4 +224,10 @@ public class MainView {
     }
 
     public Point getMaterialPos(){return material.getLocation();}
+    public void materialAddJPanel(ScalablePanel panel){
+        material.add(panel);
+        scalablePanels.add(panel);
+        this.refreshWindow();
+
+    }
 }
