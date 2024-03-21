@@ -2,6 +2,7 @@ package controller;
 
 import View.MainView;
 import controller.callbacks.NewFileCallBack;
+import helpers.ActiveBtns;
 import helpers.enums.FileOptionsE;
 import helpers.helperModels.Line;
 import model.FileData;
@@ -182,10 +183,10 @@ public class MainController implements NewFileCallBack {
 
         if (dir) {
             nextX=(int)moveX+materialPos.x;
-             scale=scale+scale*ammount;
+             scale=scale+ammount;
         }else{
             nextX=materialPos.x-(int)moveX;
-            scale=scale-scale*ammount;
+            scale=scale-ammount;
         }
 
         System.out.println(scale);
@@ -211,7 +212,16 @@ view.refreshWindow();
 
     public void toolBtnPressed(JButton btn){
 
-System.out.println(btn.getName());
+            System.out.println(btn.getName());
+             switch(btn.getName()){
+                 case "txt":
+
+                     ActiveBtns.text=true;
+
+                     break;
+
+
+             }
 
     }
 
