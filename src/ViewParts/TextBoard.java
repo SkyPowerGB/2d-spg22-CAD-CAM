@@ -57,13 +57,14 @@ public class TextBoard extends ScalablePanel {
     @Override
     public void setScale(double scale) {
         this.scale = scale;
-        super.setScale(scale);
-        repaint();
+
         if (defLoc != null) {
+            System.out.println("scaling text-setting position");
             this.setLocation((int) (defLoc.x * scale), (int) (defLoc.y * scale));
         }
-
-
+      System.out.println("scaling text");
+        super.setScale(scale);
+        repaint();
 
 
     }
