@@ -192,17 +192,14 @@ public class MainView {
     }
 
     //public methods
-
     public double getScale() {
         return scale;
     }
-
 
     public void setScale(double scale) {
         this.scale = scale;
         zoomInOut();
     }
-
 
     public JPanel getWorkspacePanel() {
         return workspacePanel;
@@ -219,7 +216,7 @@ public class MainView {
     }
     public Point getMaterialPos(){return material.getLocation();}
 
-    public boolean isPointInMaterial(Point p){
+    public boolean isPointOnMaterial(Point p){
        return getMaterialSpan().isPointInSpan(p);
     }
 
@@ -250,7 +247,6 @@ public class MainView {
       mainFrame.setVisible(true);
     }
 
-
     public void refreshWindow(){
         mainFrame.refresh();
     }
@@ -271,6 +267,7 @@ public class MainView {
         this.refreshWindow();
 
     }
+
 
 
 

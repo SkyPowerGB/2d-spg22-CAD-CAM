@@ -156,6 +156,14 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
            }
     }
 
+    //tu treba odraditi novi ponovo poboljsani radni udio
+    
+    private void clickOnMaterial(Point p){
+
+
+
+
+    }
 
 
     @Override
@@ -199,7 +207,6 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
         view.refreshWindow();
 
     }
-
     @Override
     public void zoomIn(Point p) {
 
@@ -214,6 +221,9 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
 
     @Override
     public void click(Point p) {
+        if(view.isPointOnMaterial(p)){
+            clickOnMaterial(p);
+        }
         Point clickOffsetMaterial=Span.offsetPoint(p, view.getMaterial().getLocation());
 
         if (ActiveBtns.text) {

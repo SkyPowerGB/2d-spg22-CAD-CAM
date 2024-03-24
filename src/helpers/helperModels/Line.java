@@ -6,6 +6,10 @@ public class Line {
     private double k = 0;
     private double l = 0;
 
+    private int verticalRise;
+
+    private boolean vertical;
+
 
     public Line(Point a, Point b) {
         calcKL(a, b);
@@ -16,6 +20,7 @@ public class Line {
     }
 
     private void calcKL(Point a, Point b) {
+
         if ((b.x - a.x) == 0) {
             k = 0;
         } else {
@@ -31,7 +36,8 @@ public class Line {
     }
 
     public int calcY(int x) {
-        return (int) ((k * x) + l);
+
+      return (int) ((k * x) + l);
     }
 
 

@@ -5,25 +5,44 @@ import java.awt.*;
 public class TextModel {
     Point location;
     Font font;
-    String style;
-    String text;
 
-    int fontSize;
-    public TextModel(Point location,Font font,String text,int fontSize){
+    double scale;
+
+
+    public TextModel(Point location,Font font){
         this.location=location;
         this.font=font;
-        this.text=text;
-        this.fontSize =fontSize;
-    }
-    public TextModel(Point location,Font font,String text,String style,int fontSize){
-        this.location=location;
-        this.font=font;
-        this.text=text;
-        this.fontSize =fontSize;
-        this.style=style;
+
     }
 
+    public void setScale(double scale) {
+        this.scale = scale;
+    }
 
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
+    }
+
+    public Font getScaledFont(){
+        return new Font(font.getFontName(),font.getStyle(), (int) (font.getSize()*scale));
+
+    }
+
+    public Point getScaledLocation(){
+        return new Point((int) (location.x*scale), (int) (location.y*scale));
+    }
 
 
 

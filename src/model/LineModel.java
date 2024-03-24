@@ -8,6 +8,9 @@ public class LineModel {
     double angle;
     Line lineHelper;
 
+
+
+
     public LineModel(Point A , Point B){
         this.A=A;
         this.B=B;
