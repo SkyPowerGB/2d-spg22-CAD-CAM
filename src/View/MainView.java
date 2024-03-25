@@ -24,16 +24,29 @@ public class MainView {
     JPanel   leftPanel;
     JPanel toolPanel;
     JPanel toolOptions;
+
+
+
     JPanel settingsPanel;
+    JButton addLayerBtn;
+    JButton deleteLayer;
+
+
+
+
     JScrollPane workspaceScroll;
     JScrollPane leftScrollPane;
     JScrollPane rightScrollPane;
-    JScrollPane workspaceScrollPane;
+    JScrollPane layersScrollPanel;
 
     JPanel drawnHeightLayer;
+
+
     JPanel layersGroupPanel;
     JPanel layersControlPanel;
     JPanel layersPanel;
+
+
     JPanel vectorLayer;
     LabeledInput speed;
     LabeledInput acceleration;
@@ -55,10 +68,12 @@ public class MainView {
     JLabel scaleLbl;
     double scale=1;
 
-    JButton addLayerBtn;
+
     JButton deleteLayerBtn;
 
     ScalableLayeredPane materialLayers;
+
+
 
 
     ArrayList<ScalablePanel> scalablePanels;
@@ -73,21 +88,41 @@ public class MainView {
     }
 
     private void initView(){
+        int layerPanelWidth=90;
+
         materialLayers= new ScalableLayeredPane();
         scalablePanels=new ArrayList<>();
         mainFrame = new ShownWindow();
+
         layeredPane = new JLayeredPane();
+
         layersGroupPanel =new JPanel();
+        layersGroupPanel.setPreferredSize(new Dimension(layerPanelWidth,mainFrame.getHeight()));
+
         layersControlPanel = new JPanel();
+        layersControlPanel.setSize(90,70);
 
         addLayerBtn= new JButton("+");
+        addLayerBtn.setSize(80,50);
+        deleteLayer = new JButton("-");
+
+        layersScrollPanel=new JScrollPane();
+        layersScrollPanel.add(addLayerBtn);
+
+         layersScrollPanel.setPreferredSize(new Dimension(layerPanelWidth,mainFrame.getHeight()));
+         layersScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+         layersGroupPanel.add(layersScrollPanel);
+
+
+
 
         drawingsModel=new LayerDrawingsModel();
         board=new DrawingBoard(drawingsModel);
 
 
 
-        layersGroupPanel.setPreferredSize(new Dimension(50,mainFrame.getHeight()));
+
+
 
         workspacePanel = new JPanel();
         workspacePanel.setBackground(new Color(107, 107, 107));
