@@ -1,28 +1,33 @@
 package controller;
 
 import View.MainView;
+import ViewParts.DrawingBoard;
 import ViewParts.TextBoard;
 import ViewParts.TextPropertiesPanel;
+import controller.AEclasses.PointAL;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.AEclasses.WorkspaceMouseWheelListener;
 import controller.callbacks.AddTextCallback;
 import controller.callbacks.MouseCallBacks;
 import controller.callbacks.NewFileCallBack;
+import controller.callbacks.PointPressedCallBack;
 import helpers.ActiveBtns;
 import helpers.BackgroundActive;
+import helpers.PointScaler;
 import helpers.enums.FileOptionsE;
 import helpers.helperModels.Line;
 import helpers.helperModels.Span;
-import model.FileData;
-import model.TextToDisplay;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.function.BinaryOperator;
 
-public class MainController implements NewFileCallBack, AddTextCallback , MouseCallBacks {
+public class MainController implements NewFileCallBack, AddTextCallback , MouseCallBacks, PointPressedCallBack {
     MainView view;
     private boolean middleButtonPressed;
     private int prevX, prevY;
@@ -32,11 +37,21 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
     WorkspaceMouseMotionListener mouseMotionListener;
     WorkspaceMouseListener workspaceMouseListener;
 
+    LayerDrawingsModel model;
+    DrawingBoard board;
+
+    Line2D.Double line;
+    Point lineP1;
+    int currLineIndex=-1;
+ PointAL pointAL;
     public MainController() {
    mouseWheelListener=new WorkspaceMouseWheelListener(this);
    workspaceMouseListener=new WorkspaceMouseListener(this);
    mouseMotionListener=new WorkspaceMouseMotionListener(this);
-       textPropertiesPanel =new TextPropertiesPanel();
+    pointAL=new PointAL(this);
+
+
+
         view = new MainView();
 
         ArrayList<JMenuItem> menuOptions = view.getMenuOptions();
@@ -69,8 +84,9 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
         workspace.addMouseMotionListener(mouseMotionListener);
 
 
-    }
 
+
+    }
     private void menuOptionClicked(String name) {
 
 
@@ -78,8 +94,6 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
             NewFileController controllerB = new NewFileController(this);
         }
     }
-
-
     public void zoom_in_out(int factor, Point position, boolean dir) {
         double ammount = 0.1;
         byte relation = 0;
@@ -155,35 +169,70 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
                  }
            }
     }
-
-    //tu treba odraditi novi ponovo poboljsani radni udio
-    
     private void clickOnMaterial(Point p){
+              switch (ActiveTools.toolName){
+                  case "txt": if(!ActiveTools.edit){   OpenTextForm(p);   }else{
+                        if(ActiveTools.followMouse){
+                            ActiveTools.followMouse=false;
+                        }
+                  }         break;
+                  case "line":
+                      if(ActiveTools.followMouse){currLineIndex=-1;}
+                         ActiveTools.switchFollowMouse();
 
+                        lineP1=PointScaler.getDefaultPoint(p,view.getScale());
+
+                        System.out.println("added first point of line");
+
+
+
+                      break;
+
+              }
 
 
 
     }
 
+    private void generatePointBtns(){
+
+
+        for (Line2D.Double line:model.getLines()) {
+
+        }
+
+
+
+
+
+    }
 
     @Override
     public void onFileCreate(FileData data) {
 
         view.addMaterial(data);
         view.refreshWindow();
-
+        board = view.getBoard();
+        model = board.getModel();
+        currLineIndex=-1;
     }
-
     public void toolBtnPressed(JButton btn) {
 
+        ActiveTools.toolName=btn.getName();
 
         switch (btn.getName()) {
             case "txt":
+
                 if (ActiveBtns.text) {
                     ActiveBtns.text = false;
                 } else {
                     ActiveBtns.text = true;
                 }
+
+                break;
+
+            case "line":
+
 
                 break;
 
@@ -201,10 +250,32 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
         textBoard.setScale(view.getScale());
         textBoard.setBackground(Color.ORANGE);
 
+        ActiveTools.edit=true;
+        textPropertiesPanel =new TextPropertiesPanel(Storage.tempTextBoard);
+        textPropertiesPanel.getMoveBtn().addActionListener(e->{txtFollowMouse();});
+        textPropertiesPanel.getUpdateButton().addActionListener(e->{updateText();});
+        textPropertiesPanel.getAddToMaterialBtn().addActionListener(e->drawTxtToMaterialFinal());
 
         view.addUpperOptionsPanel(textPropertiesPanel);
         view.materialAddJPanel(textBoard);
+        Storage.tempTextBoard=textBoard;
+        textPropertiesPanel.updateProp();
         view.refreshWindow();
+
+    }
+    private void updateText(){
+
+
+
+
+
+
+    }
+    private void txtFollowMouse(){
+        ActiveTools.switchFollowMouse();
+
+    }
+    private void drawTxtToMaterialFinal(){
 
     }
     @Override
@@ -218,23 +289,14 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
 
         zoom_in_out (1, p, false);
     }
-
     @Override
     public void click(Point p) {
         if(view.isPointOnMaterial(p)){
-            clickOnMaterial(p);
+            Point click=  view.recalcWorkspaceToMaterial(p);
+            clickOnMaterial(click);
         }
-        Point clickOffsetMaterial=Span.offsetPoint(p, view.getMaterial().getLocation());
 
-        if (ActiveBtns.text) {
-
-            OpenTextForm(clickOffsetMaterial);
-        }else if(ActiveBtns.line){
-            drawLine(clickOffsetMaterial);
-
-        }
     }
-
     @Override
     public void pressedMidBtn(Point location) {
              middleButtonPressed=true;
@@ -243,7 +305,6 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
         offsetX = view.getMaterialPos().x - prevX;
         offsetY = view.getMaterialPos().y - prevY;
     }
-
     @Override
     public void dragged(Point where) {
 
@@ -257,7 +318,6 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
             view.refreshWindow();
         }
     }
-
     @Override
     public void releasedMidBtn() {
          middleButtonPressed=false;
@@ -272,12 +332,42 @@ public class MainController implements NewFileCallBack, AddTextCallback , MouseC
     }
     @Override
     public void moved(Point currPos) {
+       if(ActiveTools.followMouse){
+           if(ActiveTools.toolName=="line") {
+               if(view.isPointOnMaterial(currPos)) {
+                   currPos = view.recalcWorkspaceToMaterial(currPos);
+               }
+                   Point scaledCurrent = PointScaler.getDefaultPoint(currPos,view.getScale());
+                   Line2D.Double line = new Line2D.Double(lineP1, scaledCurrent);
+
+
+                if(currLineIndex !=-1){
+                 model.removeLineAtIndex(currLineIndex);
+            System.out.println("brisem");
+                }
+             currLineIndex=  model.addLine(line);
+                view.refreshWindow();
+
+                }
+           }
+        if(ActiveTools.toolName=="text") {
+            if(view.isPointOnMaterial(currPos)){
+                       textPropertiesPanel.updateProp();
+                Storage.tempTextBoard.setDefaultLocation(view.recalcWorkspaceToMaterial(PointScaler.getDefaultPoint(currPos,view.getScale())));
+                Storage.tempTextBoard.setLocation(view.recalcWorkspaceToMaterial(currPos));
+            }
+        }
+       }
+
+    @Override
+    public void clickedPoint(Point p) {
 
     }
-
-
-
-
-
-
 }
+
+
+
+
+
+
+

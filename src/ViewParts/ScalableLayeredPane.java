@@ -23,7 +23,8 @@ public class ScalableLayeredPane extends JLayeredPane {
     }
     public void setScale(double scale) {
         this.scale = scale;
-        this.setPreferredSize(new Dimension((int) (this.getWidth()*scale), (int) (this.getHeight()*scale)));
+
+        this.setSize(new Dimension((int) (originalWidth*scale), (int) (originalHeight*scale)));
     }
     public void setScalePreferred(double scale){
         this.scale = scale;

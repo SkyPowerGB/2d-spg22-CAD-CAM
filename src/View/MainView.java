@@ -7,6 +7,7 @@ import helpers.enums.ToolNamesE;
 import helpers.enums.menuItemsE;
 import helpers.helperModels.Span;
 import model.FileData;
+import model.LayerDrawingsModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +31,9 @@ public class MainView {
     JScrollPane workspaceScrollPane;
 
     JPanel drawnHeightLayer;
+    JPanel layersGroupPanel;
+    JPanel layersControlPanel;
+    JPanel layersPanel;
     JPanel vectorLayer;
     LabeledInput speed;
     LabeledInput acceleration;
@@ -42,12 +46,17 @@ public class MainView {
     ArrayList<JMenu> menuItems ;
     ArrayList<JMenuItem> menuOptions;
 
+      LayerDrawingsModel drawingsModel;
 
+      DrawingBoard board;
     ScalablePanel material ;
     Dimension materialOriginalDim;
 
     JLabel scaleLbl;
     double scale=1;
+
+    JButton addLayerBtn;
+    JButton deleteLayerBtn;
 
     ScalableLayeredPane materialLayers;
 
@@ -68,6 +77,17 @@ public class MainView {
         scalablePanels=new ArrayList<>();
         mainFrame = new ShownWindow();
         layeredPane = new JLayeredPane();
+        layersGroupPanel =new JPanel();
+        layersControlPanel = new JPanel();
+
+        addLayerBtn= new JButton("+");
+
+        drawingsModel=new LayerDrawingsModel();
+        board=new DrawingBoard(drawingsModel);
+
+
+
+        layersGroupPanel.setPreferredSize(new Dimension(50,mainFrame.getHeight()));
 
         workspacePanel = new JPanel();
         workspacePanel.setBackground(new Color(107, 107, 107));
@@ -104,7 +124,14 @@ public class MainView {
         material.setBackground(Color.white);
         material.setLayout(null);
 
-        toolPanel.setLayout(new GridLayout(5,3,2,2));
+             board.setBackground(Color.ORANGE);
+             materialLayers.add(board);
+             board.setSize(500,500);
+             materialLayers.setSize(500,500);
+              material.add(materialLayers);
+
+
+        toolPanel.setLayout(new GridLayout(10,2,2,2));
         toolPanel.setBackground(null);
 
         for (ToolNamesE tool: ToolNamesE.values()) {
@@ -146,7 +173,8 @@ public class MainView {
         leftPanel.setPreferredSize(new Dimension(200, frameSize.height));
         leftPanel.setLayout(new BorderLayout());
         leftPanel.add(toolOptions,BorderLayout.SOUTH);
-        leftPanel.add(toolPanel,BorderLayout.NORTH);
+        leftPanel.add(toolPanel,BorderLayout.WEST);
+        leftPanel.add(layersGroupPanel,BorderLayout.EAST);
 
 
         rightSidePanel.setBackground(Color.ORANGE);
@@ -172,17 +200,15 @@ public class MainView {
         mainFrame.add(programPanel);
         mainFrame.setVisible(true);
     }
-    private void setupComponents(){}
 
-    private void buildView(){
 
-    }
 
     private void zoomInOut(){
         scaleLbl.setText(String.valueOf(scale));
 
-
         material.setScale(scale);
+        materialLayers.setScale(scale);
+        board.setScale(scale);
 
         mainFrame.setVisible(true);
         for (ScalablePanel comp:scalablePanels) {
@@ -230,11 +256,28 @@ public class MainView {
     }
 
     public void addMaterial(FileData data){
-        Dimension materialDim=new Dimension(((int)data.materialDim.getWidth()*10), ((int)data.materialDim.getHeight()*10));
+        Dimension materialDim=new Dimension(((int)data.materialDim.getWidth()*10),
+                ((int)data.materialDim.getHeight()*10));
         materialOriginalDim=materialDim;
 
+
+        materialLayers.setDefaultSize(materialDim);
+        materialLayers.setSize(materialDim);
+        materialLayers.setScale(1);
+
+
+        board.setDefaultSize(materialDim);
+        board.setSize(materialDim);
+        scalablePanels.add(board);
+
+        board.setScale(1);
+
+
+
         material.setDefaultSize(materialDim.width,materialDim.height);
-     material.setScale(scale);
+            material.setScale(scale);
+
+
 
       int Width=  workspacePanel.getWidth()/2-(((int)data.materialDim.getWidth()*10)/2);
         if(Width<0){
@@ -262,13 +305,20 @@ public class MainView {
     }
 
     public void materialAddJPanel(ScalablePanel panel){
-        material.add(panel);
+        materialLayers.add(panel,JLayeredPane.PALETTE_LAYER);
         scalablePanels.add(panel);
         this.refreshWindow();
 
     }
 
+    public Point recalcWorkspaceToMaterial(Point p){
+       Point matLoc=material.getLocation();
+       return new Point(   (p.x-(matLoc.x)), (p.y-(matLoc.y)));
+
+    }
 
 
-
+    public DrawingBoard getBoard() {
+        return board;
+    }
 }

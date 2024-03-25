@@ -14,22 +14,25 @@ public class TextBoard extends ScalablePanel {
     Point defLoc;
     double scale=1;
 
+    Font fontT;
+    String txt;
+
 
     public TextBoard(int i) {
         index = i;
+        fontT=TextToDisplay.fonts.get(index);
+        txt=TextToDisplay.text.get(this.index);
 
-        this.fontSize = TextToDisplay.fonts.get(index).getSize();
+        this.fontSize = fontT.getSize();
 
-        FontMetrics fm = getFontMetrics(TextToDisplay.fonts.get(index));
-        int width = fm.stringWidth(TextToDisplay.text.get(i)) + 10;
-        int height = fm.getHeight() + 10;
+        FontMetrics fm = getFontMetrics(fontT);
+        int width = fm.stringWidth(txt) + 20;
+        int height = fm.getHeight() + 20;
         setDefaultSize(new Dimension(width, height));
         this.setSize(width, height);
 
 
-
     }
-
 
     public void setDefaultLocation(Point p) {
 
@@ -44,12 +47,12 @@ public class TextBoard extends ScalablePanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        Font font = TextToDisplay.fonts.get(this.index);
-        Font font2 = new Font(font.getFontName(), font.getStyle(), (int) (font.getSize() * scale));
+
+        Font font2 = new Font(fontT.getFontName(), fontT.getStyle(), (int) (fontT.getSize() * scale));
 
 
         g2d.setFont(font2);
-        g2d.drawString(TextToDisplay.text.get(this.index), 0, font2.getSize());
+        g2d.drawString(txt, 0, font2.getSize());
 
 
     }
@@ -59,10 +62,10 @@ public class TextBoard extends ScalablePanel {
         this.scale = scale;
 
         if (defLoc != null) {
-            System.out.println("scaling text-setting position");
+
             this.setLocation((int) (defLoc.x * scale), (int) (defLoc.y * scale));
         }
-      System.out.println("scaling text");
+
         super.setScale(scale);
         repaint();
 
