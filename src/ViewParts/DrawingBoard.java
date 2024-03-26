@@ -1,6 +1,7 @@
 package ViewParts;
 
 import model.LayerDrawingsModel;
+import model.LineModel;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -27,6 +28,9 @@ public class DrawingBoard extends ScalablePanel {
         g2d.setStroke(stroke);
         for (Line2D.Double line : model.getLines()) {
             g2d.drawLine((int) ((int) line.x1 * super.scale), (int) ((int) line.y1 * super.scale), (int) ((int) line.x2 * super.scale), (int) ((int) line.y2 * super.scale));
+        }
+        for(LineModel model1:model.getLineModels()){
+            g2d.draw(model1.getLine());
         }
     }
 

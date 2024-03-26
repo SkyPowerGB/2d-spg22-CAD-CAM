@@ -47,9 +47,11 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     private int offsetX, offsetY;
 
     public MainController() {
+
         mouseWheelListener = new WorkspaceMouseWheelListener(this);
         workspaceMouseListener = new WorkspaceMouseListener(this);
         mouseMotionListener = new WorkspaceMouseMotionListener(this);
+
         pointAL = new PointAL(this);
 
 
@@ -68,8 +70,9 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
                 }
             });
         }
-
         for (JButton btn : toolBtns) {
+            btn.setBackground(null);
+            btn.setBorder(null);
             btn.addActionListener(e -> {
                 toolBtnPressed((JButton) e.getSource());
             });
@@ -79,15 +82,14 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
         workspace.addMouseWheelListener(mouseWheelListener);
 
-
         workspace.addMouseListener(workspaceMouseListener);
 
         workspace.addMouseMotionListener(mouseMotionListener);
 
-
         view.getAddLayerBtn().addActionListener(e -> {
             addLayer();
         });
+
 
 
     }
@@ -226,7 +228,17 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     }
 
+    boolean followMouse=false;
     private void clickOnMaterial(Point p) {
+      /*  switch (String.valueOf(improvedToolBox.getActiveTool())){
+            case "txt":
+                break;
+            case "line":
+                lineBegin(p);
+                followMouse=true;
+                break;
+
+        }*/
 
         switch (ActiveTools.toolName) {
             case "txt":
@@ -256,6 +268,18 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     }
 
+    private void mouseMovedFollow(Point p){
+        switch (String.valueOf(improvedToolBox.getActiveTool())){
+            case "txt":
+                break;
+            case "line":
+                lineBegin(p);
+               mouseFollowLn(p);
+                break;
+
+        }
+    }
+
 
     @Override
     public void onFileCreate(FileData data) {
@@ -270,6 +294,13 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     public void toolBtnPressed(JButton btn) {
 
         ActiveTools.toolName = btn.getName();
+
+
+       improvedToolBox.setActiveTool(ToolNamesE.valueOf(btn.getName()));
+
+       for(JButton tBtn:view.getToolBtns()){
+           tBtn.setIcon(TextureHelper.getToolBtnTexture(ToolNamesE.valueOf(tBtn.getName()),50));
+       }
 
         switch (btn.getName()) {
             case "txt":
@@ -290,6 +321,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
         }
 
+        view.refreshWindow();
     }
 
     @Override
@@ -395,7 +427,13 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     @Override
     public void moved(Point currPos) {
+      /*  if(followMouse){
+            mouseMovedFollow(PointScaler.getDefaultPoint(currPos,view.getScale()));
+        }*/
+
         if (ActiveTools.followMouse) {
+
+
             if (ActiveTools.toolName == "line") {
                 if (view.isPointOnMaterial(currPos)) {
                     currPos = view.recalcWorkspaceToMaterial(currPos);
@@ -428,11 +466,27 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     }
 
 
-
+    PointModel clickPoint;
+    int previousIndex;
     public void lineBegin(Point p){
         System.out.println("line begin");
+        clickPoint= new PointModel(p);
+      if(followMouse){
+          followMouse=false;
+          previousIndex=-1;
+      }
     }
-    public void mouseFollowLn(Point p){}
+    public void mouseFollowLn(Point p){
+          if(previousIndex!=-1){
+          model.removeLineModelAtIndex(previousIndex);
+              System.out.println("line delete previous follow");
+          }else{
+        System.out.println("line follow");}
+        LineModel lineModel=  new LineModel(clickPoint, new PointModel(p));
+         previousIndex=  model.addLinesModel(lineModel);
+
+    }
+
 
 
     public void setTextPoint(Point p){

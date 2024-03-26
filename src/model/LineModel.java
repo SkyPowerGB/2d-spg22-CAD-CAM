@@ -10,6 +10,23 @@ public class LineModel {
     PointModel pointB;
     BasicStroke stroke;
 
+    public Line2D.Double getLine() {
+        return line;
+    }
+
+    public LineModel(PointModel pointA, PointModel pointB) {
+        this.pointA = pointA;
+        this.pointB = pointB;
+        line=new Line2D.Double(pointA.x,pointA.y,pointB.x,pointB.y);
+    }
+
+    public LineModel(PointModel pointA, PointModel pointB, BasicStroke stroke) {
+        this.pointA = pointA;
+        this.pointB = pointB;
+        this.stroke = stroke;
+        line=new Line2D.Double(pointA.x,pointA.y,pointB.x,pointB.y);
+    }
+
     public boolean PointsOfLine(PointModel Ap, PointModel Bp){
         if(Ap==pointA&&Bp==pointB){return true;}
         return false;
@@ -18,20 +35,19 @@ public class LineModel {
     public PointModel getPointA() {
         return pointA;
     }
+    public PointModel getPointB() {
+        return pointB;
+    }
 
 
 
     public void setPointA(PointModel pointA) {
         this.pointA = pointA;
     }
-
-    public PointModel getPointB() {
-        return pointB;
-    }
-
     public void setPointB(PointModel pointB) {
         this.pointB = pointB;
     }
+
 
     public BasicStroke getStroke() {
         return stroke;

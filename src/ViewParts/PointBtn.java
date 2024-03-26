@@ -16,7 +16,7 @@ public class PointBtn extends JButton {
     Point defaultLoc;
     public PointBtn(Point p, int size){
         this.point=p;
-        modelPoint=new PointModel();
+        modelPoint=new PointModel(p);
           this.setSize(new Dimension(size,size));
 
     }

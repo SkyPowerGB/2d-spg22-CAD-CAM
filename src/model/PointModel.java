@@ -2,10 +2,17 @@ package model;
 
 import java.awt.*;
 
-public class PointModel extends Point {
+public class PointModel {
 
+    Point p;
+    public int x;
+    public int y;
 
-    public PointModel() {
+    public PointModel(Point p) {
+
+        this.p=p;
+        x=p.x;
+        y=p.y;
     }
 
 
