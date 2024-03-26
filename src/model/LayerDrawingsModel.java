@@ -5,11 +5,12 @@ import java.util.ArrayList;
 
 public class LayerDrawingsModel {
     ArrayList<Line2D.Double> lines;
+    ArrayList<TextModel> texts;
+
 
     public LayerDrawingsModel(){
         lines=new ArrayList<>();
     }
-
 
     public ArrayList<Line2D.Double> getLines() {
         return lines;

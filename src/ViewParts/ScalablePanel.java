@@ -41,6 +41,9 @@ public class ScalablePanel extends JPanel {
         super.setPreferredSize(new Dimension((int) (originalWidth*scale), (int) (originalHeight*scale)));
     }
 
+    public Dimension getDefaultSize(){
+        return new Dimension(originalWidth,originalHeight);
+    }
 
 
 

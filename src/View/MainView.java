@@ -8,6 +8,7 @@ import helpers.enums.menuItemsE;
 import helpers.helperModels.Span;
 import model.FileData;
 import model.LayerDrawingsModel;
+import model.Layers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,26 +22,15 @@ public class MainView {
     JLayeredPane layeredPane;
     JPanel programPanel;
     JPanel workspacePanel;
-    JPanel   leftPanel;
+    JPanel leftPanel;
     JPanel toolPanel;
     JPanel toolOptions;
 
-
-
-    JPanel settingsPanel;
     JButton addLayerBtn;
     JButton deleteLayer;
 
 
-
-
-    JScrollPane workspaceScroll;
     JScrollPane leftScrollPane;
-    JScrollPane rightScrollPane;
-    JScrollPane layersScrollPanel;
-
-    JPanel drawnHeightLayer;
-
 
     JPanel layersGroupPanel;
     JPanel layersControlPanel;
@@ -48,25 +38,21 @@ public class MainView {
 
 
     JPanel vectorLayer;
-    LabeledInput speed;
-    LabeledInput acceleration;
-    LabeledInput zStep;
 
+    LabeledInput zStep;
     ArrayList<JButton> toolBtns;
     JPanel rightSidePanel;
     JPanel upperPanel;
     JMenuBar menuBar;
-    ArrayList<JMenu> menuItems ;
+    ArrayList<JMenu> menuItems;
     ArrayList<JMenuItem> menuOptions;
-
-      LayerDrawingsModel drawingsModel;
-
-      DrawingBoard board;
-    ScalablePanel material ;
+    LayerDrawingsModel drawingsModel;
+    DrawingBoard board;
+    ScalablePanel material;
     Dimension materialOriginalDim;
 
     JLabel scaleLbl;
-    double scale=1;
+    double scale = 1;
 
 
     JButton deleteLayerBtn;
@@ -74,54 +60,52 @@ public class MainView {
     ScalableLayeredPane materialLayers;
 
 
-
-
     ArrayList<ScalablePanel> scalablePanels;
+
+    public MainView() {
+
+        initView();
+    }
 
     public ArrayList<JButton> getToolBtns() {
         return toolBtns;
     }
 
-    public MainView() {
+    private void initView() {
+        int layerPanelWidth = 90;
 
-    initView();
-    }
-
-    private void initView(){
-        int layerPanelWidth=90;
-
-        materialLayers= new ScalableLayeredPane();
-        scalablePanels=new ArrayList<>();
+        materialLayers = new ScalableLayeredPane();
+        scalablePanels = new ArrayList<>();
         mainFrame = new ShownWindow();
+
 
         layeredPane = new JLayeredPane();
 
-        layersGroupPanel =new JPanel();
-        layersGroupPanel.setPreferredSize(new Dimension(layerPanelWidth,mainFrame.getHeight()));
+
+        layersGroupPanel = new JPanel(new BorderLayout());
+        layersGroupPanel.setPreferredSize(new Dimension(layerPanelWidth, mainFrame.getHeight()));
 
         layersControlPanel = new JPanel();
-        layersControlPanel.setSize(90,70);
+        layersControlPanel.setPreferredSize(new Dimension(90, 70));
 
-        addLayerBtn= new JButton("+");
-        addLayerBtn.setSize(80,50);
+        addLayerBtn = new JButton("+");
+        addLayerBtn.setPreferredSize(new Dimension(100, 50));
         deleteLayer = new JButton("-");
 
-        layersScrollPanel=new JScrollPane();
-        layersScrollPanel.add(addLayerBtn);
-
-         layersScrollPanel.setPreferredSize(new Dimension(layerPanelWidth,mainFrame.getHeight()));
-         layersScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-         layersGroupPanel.add(layersScrollPanel);
+        layersPanel = new JPanel();
+        layersPanel.setLayout(new GridLayout(1000, 1)); // Use BoxLayout to allow vertical expansion
 
 
+        JScrollPane scrollPane = new JScrollPane(layersPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 
-        drawingsModel=new LayerDrawingsModel();
-        board=new DrawingBoard(drawingsModel);
+        layersGroupPanel.add(addLayerBtn, BorderLayout.NORTH);
+        layersGroupPanel.add(scrollPane, BorderLayout.CENTER);
 
 
-
-
+        drawingsModel = new LayerDrawingsModel();
+        board = new DrawingBoard(drawingsModel);
 
 
         workspacePanel = new JPanel();
@@ -132,101 +116,98 @@ public class MainView {
         rightSidePanel = new JPanel();
         upperPanel = new JPanel();
         programPanel = new JPanel();
-        menuBar=new JMenuBar();
-        menuItems=new ArrayList<>();
-        menuOptions=new ArrayList<>();
-        toolBtns =new ArrayList<>();
-        toolPanel =new JPanel();
+        menuBar = new JMenuBar();
+        menuItems = new ArrayList<>();
+        menuOptions = new ArrayList<>();
+        toolBtns = new ArrayList<>();
+        toolPanel = new JPanel();
         toolOptions = new JPanel();
         leftScrollPane = new JScrollPane();
 
-        vectorLayer=new JPanel();
+        vectorLayer = new JPanel();
         vectorLayer.setLayout(null);
 
-        zStep=new LabeledInput();
+        zStep = new LabeledInput();
 
         zStep.input.setText("0.1");
         zStep.label.setText("Z-resolution mm");
 
 
-        bottomPanel=new JPanel();
-        bottomPanel.setPreferredSize(new Dimension(mainFrame.getWidth(),50));
+        bottomPanel = new JPanel();
+        bottomPanel.setPreferredSize(new Dimension(mainFrame.getWidth(), 50));
 
-        scaleLbl=new JLabel();
+        scaleLbl = new JLabel();
         scaleLbl.setText(String.valueOf(scale));
 
         material = new ScalablePanel();
         material.setBackground(Color.white);
         material.setLayout(null);
 
-             board.setBackground(Color.ORANGE);
-             materialLayers.add(board);
-             board.setSize(500,500);
-             materialLayers.setSize(500,500);
-              material.add(materialLayers);
+        board.setBackground(Color.ORANGE);
+        materialLayers.add(board);
+        board.setSize(500, 500);
+        materialLayers.setSize(500, 500);
+        material.add(materialLayers);
 
 
-        toolPanel.setLayout(new GridLayout(10,2,2,2));
+        toolPanel.setLayout(new GridLayout(10, 2, 2, 2));
         toolPanel.setBackground(null);
 
-        for (ToolNamesE tool: ToolNamesE.values()) {
+        for (ToolNamesE tool : ToolNamesE.values()) {
 
-            JButton toolBtn= new JButton();
-            toolBtn.setPreferredSize(new Dimension(50,50));
-            toolBtn.setIcon(TextureHelper.getToolBtnTexture(tool,50));
+            JButton toolBtn = new JButton();
+            toolBtn.setPreferredSize(new Dimension(50, 50));
+            toolBtn.setIcon(TextureHelper.getToolBtnTexture(tool, 50));
             toolBtn.setName(tool.toString());
             toolPanel.add(toolBtn);
             toolBtns.add(toolBtn);
         }
-        for (menuItemsE item:menuItemsE.values()) {
-            JMenu menu= new JMenu(item.toString());
+        for (menuItemsE item : menuItemsE.values()) {
+            JMenu menu = new JMenu(item.toString());
             menuItems.add(menu);
             menuBar.add(menu);
         }
-        for(FileOptionsE item:FileOptionsE.values()){
-            JMenuItem menuItem=new JMenuItem(item.toString());
+        for (FileOptionsE item : FileOptionsE.values()) {
+            JMenuItem menuItem = new JMenuItem(item.toString());
             menuItem.setName(item.toString());
             menuOptions.add(menuItem);
             menuItems.get(0).add(menuItem);
         }
 
 
-
-
-        Dimension frameSize=mainFrame.getSize();
+        Dimension frameSize = mainFrame.getSize();
         mainFrame.setTitle("2D SPG-22 CAM");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setJMenuBar(menuBar);
 
-        menuBar.setPreferredSize(new Dimension(mainFrame.getWidth(),50));
+        menuBar.setPreferredSize(new Dimension(mainFrame.getWidth(), 50));
 
         programPanel.setLayout(new BorderLayout());
-
 
 
         leftPanel.setBackground(Color.cyan);
         leftPanel.setPreferredSize(new Dimension(200, frameSize.height));
         leftPanel.setLayout(new BorderLayout());
-        leftPanel.add(toolOptions,BorderLayout.SOUTH);
-        leftPanel.add(toolPanel,BorderLayout.WEST);
-        leftPanel.add(layersGroupPanel,BorderLayout.EAST);
+        leftPanel.add(toolOptions, BorderLayout.SOUTH);
+        leftPanel.add(toolPanel, BorderLayout.WEST);
+        leftPanel.add(layersGroupPanel, BorderLayout.EAST);
 
 
         rightSidePanel.setBackground(Color.ORANGE);
         rightSidePanel.setPreferredSize(new Dimension(100, frameSize.height));
 
         upperPanel.setBackground(Color.blue);
-        upperPanel.setPreferredSize(new Dimension(frameSize.width ,50));
+        upperPanel.setPreferredSize(new Dimension(frameSize.width, 50));
 
 
-        bottomPanel.add(scaleLbl,BorderLayout.EAST);
+        bottomPanel.add(scaleLbl, BorderLayout.EAST);
 
 
         programPanel.add(leftPanel, BorderLayout.WEST);
         programPanel.add(rightSidePanel, BorderLayout.EAST);
         programPanel.add(upperPanel, BorderLayout.NORTH);
         programPanel.add(workspacePanel, BorderLayout.CENTER);
-        programPanel.add(bottomPanel,BorderLayout.SOUTH);
+        programPanel.add(bottomPanel, BorderLayout.SOUTH);
 
 
         layeredPane.add(programPanel, JLayeredPane.DEFAULT_LAYER);
@@ -235,10 +216,40 @@ public class MainView {
         mainFrame.add(programPanel);
         mainFrame.setVisible(true);
     }
+    public void addMaterial(FileData data) {
+        Dimension materialDim = new Dimension(((int) data.materialDim.getWidth() * 10),
+                ((int) data.materialDim.getHeight() * 10));
+        materialOriginalDim = materialDim;
 
 
+        materialLayers.setDefaultSize(materialDim);
+        materialLayers.setSize(materialDim);
+        materialLayers.setScale(1);
 
-    private void zoomInOut(){
+
+        board.setDefaultSize(materialDim);
+        board.setSize(materialDim);
+        scalablePanels.add(board);
+
+        board.setScale(1);
+
+
+        material.setDefaultSize(materialDim.width, materialDim.height);
+        material.setScale(scale);
+
+
+        int Width = workspacePanel.getWidth() / 2 - (((int) data.materialDim.getWidth() * 10) / 2);
+        if (Width < 0) {
+            Width = 0;
+        }
+
+        material.setLocation(Width, 0);
+
+        workspacePanel.add(material);
+        mainFrame.setVisible(true);
+    }
+
+    private void zoomInOut() {
         scaleLbl.setText(String.valueOf(scale));
 
         material.setScale(scale);
@@ -246,7 +257,7 @@ public class MainView {
         board.setScale(scale);
 
         mainFrame.setVisible(true);
-        for (ScalablePanel comp:scalablePanels) {
+        for (ScalablePanel comp : scalablePanels) {
 
             comp.setScale(scale);
         }
@@ -269,19 +280,23 @@ public class MainView {
     public ScalablePanel getMaterial() {
         return material;
     }
-    public Span getMaterialSpan(){
-        Point matP=material.getLocation();
-        Point matE=new Point(matP.x+material.getWidth(),matP.y+material.getHeight());
 
-        return new Span(matP,matE);
-    }
-    public Point getMaterialPos(){return material.getLocation();}
+    public Span getMaterialSpan() {
+        Point matP = material.getLocation();
+        Point matE = new Point(matP.x + material.getWidth(), matP.y + material.getHeight());
 
-    public boolean isPointOnMaterial(Point p){
-       return getMaterialSpan().isPointInSpan(p);
+        return new Span(matP, matE);
     }
 
-    public void setMaterialLoc(Point p){
+    public Point getMaterialPos() {
+        return material.getLocation();
+    }
+
+    public boolean isPointOnMaterial(Point p) {
+        return getMaterialSpan().isPointInSpan(p);
+    }
+
+    public void setMaterialLoc(Point p) {
         material.setLocation(p);
         mainFrame.refresh();
     }
@@ -289,66 +304,35 @@ public class MainView {
     public ArrayList<JMenuItem> getMenuOptions() {
         return menuOptions;
     }
-
-    public void addMaterial(FileData data){
-        Dimension materialDim=new Dimension(((int)data.materialDim.getWidth()*10),
-                ((int)data.materialDim.getHeight()*10));
-        materialOriginalDim=materialDim;
-
-
-        materialLayers.setDefaultSize(materialDim);
-        materialLayers.setSize(materialDim);
-        materialLayers.setScale(1);
-
-
-        board.setDefaultSize(materialDim);
-        board.setSize(materialDim);
-        scalablePanels.add(board);
-
-        board.setScale(1);
-
-
-
-        material.setDefaultSize(materialDim.width,materialDim.height);
-            material.setScale(scale);
-
-
-
-      int Width=  workspacePanel.getWidth()/2-(((int)data.materialDim.getWidth()*10)/2);
-        if(Width<0){
-            Width=0;
-        }
-
-        material.setLocation(Width,0);
-
-      workspacePanel.add(material);
-      mainFrame.setVisible(true);
+    public void boardSetDrawingsModel(LayerDrawingsModel model){
+        board.setModel(model);
+        this.refreshWindow();
     }
 
-    public void refreshWindow(){
+    public void refreshWindow() {
         mainFrame.refresh();
     }
 
-    public void addUpperOptionsPanel(JPanel panel){
+    public void addUpperOptionsPanel(JPanel panel) {
         upperPanel.add(panel);
         mainFrame.refresh();
     }
 
-    public void removeUpperOptionsPanel(JPanel panel){
+    public void removeUpperOptionsPanel(JPanel panel) {
         upperPanel.remove(panel);
         mainFrame.refresh();
     }
 
-    public void materialAddJPanel(ScalablePanel panel){
-        materialLayers.add(panel,JLayeredPane.PALETTE_LAYER);
+    public void materialAddJPanel(ScalablePanel panel) {
+        materialLayers.add(panel, JLayeredPane.PALETTE_LAYER);
         scalablePanels.add(panel);
         this.refreshWindow();
 
     }
 
-    public Point recalcWorkspaceToMaterial(Point p){
-       Point matLoc=material.getLocation();
-       return new Point(   (p.x-(matLoc.x)), (p.y-(matLoc.y)));
+    public Point recalcWorkspaceToMaterial(Point p) {
+        Point matLoc = material.getLocation();
+        return new Point((p.x - (matLoc.x)), (p.y - (matLoc.y)));
 
     }
 
@@ -356,4 +340,16 @@ public class MainView {
     public DrawingBoard getBoard() {
         return board;
     }
+
+    public JButton getAddLayerBtn() {
+        return addLayerBtn;
+    }
+
+    public void addLayer(LayerPanel panel) {
+        layersPanel.add(panel);
+        mainFrame.refresh();
+    }
+
+
+    public void startLine(){}
 }

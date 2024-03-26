@@ -49,6 +49,7 @@ public class NewFile extends JFrame{
         return  homeRadBtn.isSelected();
     }
 
+
     public double getMaterialHeight(){
         String matH=materialHeightTf.getText();
 
