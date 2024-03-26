@@ -28,7 +28,7 @@ public class PointBtn extends JButton {
     public void setLocation(@NotNull Point p) {
         p=new Point(p.x-(getWidth()/2),p.y-(getHeight()/2));
         defaultLoc=p;
-       modelPoint.setPoint(p);
+
         super.setLocation(p);
     }
 
