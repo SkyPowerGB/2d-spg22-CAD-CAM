@@ -1,30 +1,28 @@
 package model;
 
+import ViewParts.PointBtn;
+
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public class LayerDrawingsModel {
-    ArrayList<Line2D.Double> lines;
+
     ArrayList<LineModel> lineModels;
     ArrayList<TextModel> texts;
 
 
     public LayerDrawingsModel(){
-        lines=new ArrayList<>();
+
         lineModels=new ArrayList<>();
+        texts=new ArrayList<>();
+
     }
 
-    public ArrayList<Line2D.Double> getLines() {
-        return lines;
+    public ArrayList<TextModel> getTexts() {
+        return texts;
     }
 
 
-
-    public int addLine(Line2D.Double line){
-        lines.add(line);
-
-        return lines.indexOf(line);
-    }
     public int addLinesModel(LineModel lineModel){
         lineModels.add(lineModel);
         return lineModels.indexOf(lineModel);
@@ -34,11 +32,17 @@ public class LayerDrawingsModel {
         return lineModels;
     }
 
-    public void removeLineAtIndex(int i){
-        lines.remove(i);
+    public void removeLineModelAtIndex(int i){lineModels.remove(i);}
+    public void removeLineModel(LineModel lineModel){
+        lineModels.remove(lineModel);
     }
 
-    public void removeLineModelAtIndex(int i){lineModels.remove(i);}
+    public void addTxt(TextModel modelTxt){
+        texts.add(modelTxt);
+    }
+
+    public void addPointBtn(PointBtn pointBtn) {
 
 
+    }
 }

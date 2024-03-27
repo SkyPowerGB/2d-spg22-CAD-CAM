@@ -4,15 +4,25 @@ import java.awt.*;
 
 public class PointModel {
 
-    Point p;
+    public Point point;
     public int x;
     public int y;
 
     public PointModel(Point p) {
 
-        this.p=p;
+        this.point =p;
         x=p.x;
         y=p.y;
+    }
+
+    public PointModel(int x, int y){
+        this.point =new Point(x,y);
+        this.x=x;
+        this.y=y;
+    }
+
+    public Point getScaledLocation(double scale){
+        return new Point((int) (x*scale), (int) (y*scale));
     }
 
 

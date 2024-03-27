@@ -1,6 +1,6 @@
 package View;
 
-import model.TextToDisplay;
+import model.TextModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +50,7 @@ public class DrawText extends JFrame{
 
     }
 
-    public int storeAndGetData(){
+    public TextModel storeAndGetData(){
         String text=textTf.getText();
         String font= (String) fontTf.getSelectedItem();
         int fontSize=12;
@@ -61,7 +61,7 @@ public class DrawText extends JFrame{
         }
 
         Font font1=new Font(font, Font.PLAIN,fontSize);
-       return TextToDisplay.addText(text,font1);
+       return TextModel.drawText(text,font1);
 
     }
 

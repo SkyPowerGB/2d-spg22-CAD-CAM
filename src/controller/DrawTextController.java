@@ -16,9 +16,10 @@ public class DrawTextController {
 
     public void closeWindow(){view.closeWindow();}
     public void addText(){
-        int index= view.storeAndGetData();
+
         view.closeWindow();
-        callback.AddText(index);
+
+        callback.AddText(view.storeAndGetData());
     }
 
 

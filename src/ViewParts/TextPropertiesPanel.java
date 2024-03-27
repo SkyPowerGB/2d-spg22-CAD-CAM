@@ -8,14 +8,10 @@ public class TextPropertiesPanel extends JPanel {
 
     public  TextPropertiesPanel(){
 
-        this.add(TextProperties);
-    }
-    public TextPropertiesPanel(TextBoard board){
-        this.board=board;
 
-        this.add(TextProperties);
     }
-    private TextBoard board;
+
+
 
     private JComboBox FontsTF;
     private JPanel TextProperties;
@@ -40,8 +36,5 @@ public class TextPropertiesPanel extends JPanel {
         return addToMaterialBtn;
     }
 
-    public void updateProp(){
-        this.PositionIndicator.setText("Position: "+ Storage.tempTextBoard.getLocation().x +"/"+
-                Storage.tempTextBoard.getLocation().y);
-    }
+
 }

@@ -4,6 +4,7 @@ import ViewParts.*;
 import helpers.TextureHelper;
 import helpers.enums.FileOptionsE;
 import helpers.enums.ToolNamesE;
+import helpers.enums.WrkSpcNavPanBtnsE;
 import helpers.enums.menuItemsE;
 import helpers.helperModels.Span;
 import model.FileData;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 
 public class MainView {
 
+
+    JButton hideConnectPoints, showConnectPoints, workspaceHomeLoc,workspaceScaleDefault;
     JPanel bottomPanel;
     ShownWindow mainFrame;
     JLayeredPane layeredPane;
@@ -25,9 +28,12 @@ public class MainView {
     JPanel leftPanel;
     JPanel toolPanel;
     JPanel toolOptions;
+    JPanel workspaceNavigationPanel;
 
     JButton addLayerBtn;
     JButton deleteLayer;
+
+
 
 
     JScrollPane leftScrollPane;
@@ -81,7 +87,6 @@ public class MainView {
 
         layeredPane = new JLayeredPane();
 
-
         layersGroupPanel = new JPanel(new BorderLayout());
         layersGroupPanel.setPreferredSize(new Dimension(layerPanelWidth, mainFrame.getHeight()));
 
@@ -93,7 +98,7 @@ public class MainView {
         deleteLayer = new JButton("-");
 
         layersPanel = new JPanel();
-        layersPanel.setLayout(new GridLayout(1000, 1)); // Use BoxLayout to allow vertical expansion
+        layersPanel.setLayout(new GridLayout(64, 1)); // Use BoxLayout to allow vertical expansion
 
 
         JScrollPane scrollPane = new JScrollPane(layersPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -149,14 +154,13 @@ public class MainView {
         materialLayers.setSize(500, 500);
         material.add(materialLayers);
 
-
         toolPanel.setLayout(new GridLayout(10, 2, 2, 2));
         toolPanel.setBackground(null);
 
         for (ToolNamesE tool : ToolNamesE.values()) {
 
             JButton toolBtn = new JButton();
-            toolBtn.setPreferredSize(new Dimension(50, 50));
+            toolBtn.setSize(new Dimension(50, 50));
             toolBtn.setIcon(TextureHelper.getToolBtnTexture(tool, 50));
             toolBtn.setName(tool.toString());
             toolPanel.add(toolBtn);
@@ -198,10 +202,49 @@ public class MainView {
 
         upperPanel.setBackground(Color.blue);
         upperPanel.setPreferredSize(new Dimension(frameSize.width, 50));
+        upperPanel.setLayout(new GridLayout(1,20));
+
+        workspaceNavigationPanel =new JPanel();
+        workspaceNavigationPanel.setLayout(new GridLayout(1,3));
+        workspaceNavigationPanel.setBackground(Color.cyan);
+;
+
+        int wkspcNavBtnsSIze=60;
+
+        workspaceHomeLoc = new JButton();
+        workspaceHomeLoc.setIcon(TextureHelper.getControlBtnTexture(WrkSpcNavPanBtnsE.locZZ,wkspcNavBtnsSIze));
+
+        showConnectPoints=new JButton();
+        showConnectPoints.setIcon(TextureHelper.getControlBtnTexture(WrkSpcNavPanBtnsE.showConnectDots,wkspcNavBtnsSIze));
+
+         hideConnectPoints=new JButton();
+         hideConnectPoints.addActionListener(e->{board.removeAll(); mainFrame.refresh();});
 
 
-        bottomPanel.add(scaleLbl, BorderLayout.EAST);
+        workspaceScaleDefault=new JButton();
+        workspaceScaleDefault.setIcon(TextureHelper.getControlBtnTexture(WrkSpcNavPanBtnsE.scaleDefault,wkspcNavBtnsSIze));
 
+        workspaceScaleDefault.addActionListener(e->{setScale(1);});
+        workspaceHomeLoc.addActionListener(e->{material.setLocation(0,0);});
+
+        workspaceNavigationPanel.add(hideConnectPoints);
+        workspaceNavigationPanel.add(showConnectPoints);
+        workspaceNavigationPanel.add(workspaceHomeLoc);
+        workspaceNavigationPanel.add(workspaceScaleDefault);
+
+
+
+
+       upperPanel.add(new JPanel());
+        upperPanel.add(workspaceNavigationPanel);
+        upperPanel.add(new JPanel());
+
+
+
+
+
+
+        bottomPanel.add(scaleLbl,BorderLayout.EAST);
 
         programPanel.add(leftPanel, BorderLayout.WEST);
         programPanel.add(rightSidePanel, BorderLayout.EAST);
@@ -336,7 +379,6 @@ public class MainView {
 
     }
 
-
     public DrawingBoard getBoard() {
         return board;
     }
@@ -346,10 +388,16 @@ public class MainView {
     }
 
     public void addLayer(LayerPanel panel) {
+
         layersPanel.add(panel);
         mainFrame.refresh();
     }
-
+  public void removeLayers(){
+        layersPanel.removeAll();
+  }
+    public JButton getWorkspaceShowPointsBtn(){
+        return  showConnectPoints;
+    }
 
     public void startLine(){}
 }

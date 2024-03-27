@@ -14,22 +14,32 @@ public class PointBtn extends JButton {
     PointModel modelPoint;
     double scale;
     Point defaultLoc;
-    public PointBtn(Point p, int size){
-        this.point=p;
-        modelPoint=new PointModel(p);
-          this.setSize(new Dimension(size,size));
+    Dimension defaultDim;
 
+
+    public PointBtn(PointModel modelPoint,int size){
+        this.modelPoint=modelPoint;
+        defaultDim=new Dimension(size,size);
+        this.setSize(defaultDim);
+        point=modelPoint.point;
+        this.setLocation(point);
     }
     public void setScale(double scale){
         this.scale=scale;
-        this.setSize((int) (defaultLoc.x*scale), (int) (defaultLoc.y*scale));
+         Point scaledLoc=new Point((int) (point.x*scale), (int) (point.y*scale));
+        this.setLocation(scaledLoc);
+        this.setSize(new Dimension((int) (defaultDim.width*scale), (int) (defaultDim.height*scale)));
     }
     @Override
     public void setLocation(@NotNull Point p) {
         p=new Point(p.x-(getWidth()/2),p.y-(getHeight()/2));
-        defaultLoc=p;
+
 
         super.setLocation(p);
+    }
+
+    public PointModel getModelPoint(){
+        return modelPoint;
     }
 
 

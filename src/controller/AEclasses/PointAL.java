@@ -1,5 +1,7 @@
 package controller.AEclasses;
 import java.awt.Point;
+
+import ViewParts.PointBtn;
 import controller.callbacks.PointPressedCallBack;
 
 import javax.swing.*;
@@ -13,7 +15,8 @@ public class PointAL implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        PointBtn btn= (PointBtn) e.getSource();
+            callBack.clickedPoint(btn.getModelPoint());
     }
 
 }

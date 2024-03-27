@@ -2,6 +2,8 @@ package ViewParts;
 
 import model.LayerDrawingsModel;
 import model.LineModel;
+import model.PointModel;
+import model.TextModel;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -13,6 +15,7 @@ public class DrawingBoard extends ScalablePanel {
 
     public DrawingBoard(LayerDrawingsModel model) {
         this.model = model;
+        this.setLayout(null);
     }
 
     public DrawingBoard() {
@@ -26,17 +29,27 @@ public class DrawingBoard extends ScalablePanel {
         g2d.setColor(Color.black);
         BasicStroke stroke = new BasicStroke((float) (1*(super.scale)));
         g2d.setStroke(stroke);
-        for (Line2D.Double line : model.getLines()) {
-            g2d.drawLine((int) ((int) line.x1 * super.scale), (int) ((int) line.y1 * super.scale), (int) ((int) line.x2 * super.scale), (int) ((int) line.y2 * super.scale));
-        }
+
         for(LineModel model1:model.getLineModels()){
-            g2d.draw(model1.getLine());
+            g2d.draw(model1.getLineScaled(super.scale));
+            model1.pointBtnA.setScale(super.scale);
+            model1.pointBtnB.setScale(super.scale);
         }
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        for(TextModel txt: model.getTexts()){
+            g2d.setFont(txt.getScaledFont(super.scale));
+            PointModel txtLox=txt.getScaledLoc(super.scale);
+            g2d.drawString(txt.getTxt(),txtLox.x,txtLox.y);
+        }
+
     }
 
     @Override
     public void setScale(double scale) {
         this.scale = scale;
+
 
         super.setScale(scale);
         repaint();
@@ -50,5 +63,17 @@ public class DrawingBoard extends ScalablePanel {
 
     public void setModel(LayerDrawingsModel model) {
         this.model = model;
+    }
+
+    public void addPointBtns(){
+        this.removeAll();
+        for (LineModel model:model.getLineModels()) {
+            this.add(model.pointBtnA);
+            this.add(model.pointBtnB);
+        }
+
+    }
+    public void removePointBtns(){
+        this.removeAll();
     }
 }
