@@ -1,6 +1,9 @@
 package model;
 
 import ViewParts.PointBtn;
+import helpers.enums.ToolNamesE;
+import helpers.enums.ToolStatesE;
+import helpers.improvedToolBox;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -18,36 +21,77 @@ public class LineModel {
   public  static boolean started=false;
     public static boolean finished=false;
     static boolean deletePrevious=false;
-    static Point tempPa;
+    static PointModel tempPa;
     static LineModel tempLine;
     static LayerDrawingsModel modelTemp;
-    public static void preparePointLine(Point p,LayerDrawingsModel model){
-             if(started){
-                 started=false;
-                 finished=true;
-                 deletePrevious=false;
 
-                return;
 
-             }
+    private static boolean pointExits(LayerDrawingsModel layerDrawingsModel,PointModel p){
+        for (LineModel ln:layerDrawingsModel.lineModels) {
+                  if(ln.pointBtnExits(p)){
+                      return true;
+                  }
+        }
+        return false;
+    }
 
-             tempPa=p;
-             finished=false;
+
+
+    public static void lineBeginImproved(PointModel point,LayerDrawingsModel model){
              modelTemp=model;
-             started=true;
+             if(improvedToolBox.toolState==ToolStatesE.lineTracking){
+
+
+                 improvedToolBox.toolState=ToolStatesE.inactive;
+
+                 finishLine(point);
+
+             }else{
+                 System.out.println("ln begin model");
+                  improvedToolBox.toolState=ToolStatesE.lineTracking;
+                  tempPa=point;
+             }
     }
-    public static void drawTempLine(Point b){
-                   if(!started){return;}
-                   if(deletePrevious){
-                       modelTemp.removeLineModel(tempLine);
+    public static void lineMoving(PointModel point){
+        if(improvedToolBox.toolState!=ToolStatesE.lineTracking){
+            if(improvedToolBox.toolState==ToolStatesE.inactive){
+                if(tempLine!=null){
+                    if(modelTemp==null){return;}
+                    modelTemp.removeLineModel(tempLine);
+                }
 
-                   }
-
-               tempLine=new LineModel(new PointModel(tempPa),new PointModel(b));
-               modelTemp.addLinesModel(tempLine);
-               deletePrevious=true;
+            }
+            return;
+        }
+        if(tempLine!=null){
+             modelTemp.removeLineModel(tempLine);
+        }
+        tempLine=new LineModel(tempPa,point);
+        modelTemp.addLinesModel(tempLine);
     }
 
+    public static void finishLine(PointModel pb){
+        LineModel ln=new LineModel(tempPa,pb);
+
+           improvedToolBox.toolState=ToolStatesE.inactive;
+        System.out.println("finish line");
+
+        modelTemp.addLinesModel(ln);
+        modelTemp.removeLineModel(tempLine);
+        tempLine=null;
+
+    }
+
+    static int pointIndex=0;
+    static PointModel[] lnTemp= new PointModel[2];
+    public static void lnAddPoint(PointModel p){
+        if(improvedToolBox.toolState== ToolStatesE.lineBegin||improvedToolBox.toolState==ToolStatesE.lineClickDot){
+
+        }
+       else if(improvedToolBox.toolState==ToolStatesE.lineTracking){
+
+        }
+    }
 
     public LineModel(PointModel pointA, PointModel pointB) {
         this.pointA = pointA;
@@ -86,20 +130,26 @@ public class LineModel {
         return pointB;
     }
 
-
-
     public void setPointA(PointModel pointA) {
         this.pointA = pointA;
     }
     public void setPointB(PointModel pointB) {
         this.pointB = pointB;
     }
-
-
     public BasicStroke getStroke() {
         return stroke;
     }
     public void setStroke(BasicStroke stroke) {
         this.stroke = stroke;
     }
+
+    public boolean pointBtnExits(PointModel point){
+           if(pointBtnA.isSamePoint(point)){
+               return true;
+           }else if(pointBtnB.isSamePoint(point)){
+               return true;
+           }else{return false;}
+
+    }
+
 }

@@ -42,5 +42,12 @@ public class PointBtn extends JButton {
         return modelPoint;
     }
 
+    public boolean isSamePoint(PointModel p){
+        if(this.modelPoint==p){
+            return true;
+        }
+        return false;
+    }
+
 
 }

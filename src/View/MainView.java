@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 public class MainView {
 
-
     JButton hideConnectPoints, showConnectPoints, workspaceHomeLoc,workspaceScaleDefault;
     JPanel bottomPanel;
     ShownWindow mainFrame;
@@ -33,18 +32,12 @@ public class MainView {
     JButton addLayerBtn;
     JButton deleteLayer;
 
-
-
-
     JScrollPane leftScrollPane;
 
     JPanel layersGroupPanel;
     JPanel layersControlPanel;
     JPanel layersPanel;
-
-
     JPanel vectorLayer;
-
     LabeledInput zStep;
     ArrayList<JButton> toolBtns;
     JPanel rightSidePanel;
@@ -392,7 +385,7 @@ public class MainView {
         layersPanel.add(panel);
         mainFrame.refresh();
     }
-  public void removeLayers(){
+    public void removeLayers(){
         layersPanel.removeAll();
   }
     public JButton getWorkspaceShowPointsBtn(){

@@ -22,9 +22,7 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.VolatileImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import helpers.enums.ToolNamesE;
@@ -38,6 +36,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     WorkspaceMouseMotionListener mouseMotionListener;
     WorkspaceMouseListener workspaceMouseListener;
     LayerDrawingsModel model;
+    PointAL pointAL;
 
 
     FileData data;
@@ -45,7 +44,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     Point lineP1;
     int currLineIndex = -1;
-    PointAL pointAL;
+
     private boolean middleButtonPressed;
     private int prevX, prevY;
     private int offsetX, offsetY;
@@ -153,10 +152,6 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
         layer.add(btn);
         layers.forEach((k,l)-> view.addLayer(l));
 
-
-
-
-
     }
     private void selectLayer(String index) {
         int i = Integer.parseInt(index);
@@ -239,8 +234,6 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
 
     }
-
-
     //callbacks
     @Override
     public void onFileCreate(FileData data) {
@@ -251,7 +244,6 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
         model = board.getModel();
         currLineIndex = -1;
     }
-
     public void toolBtnPressed(JButton btn) {
 
 
@@ -282,26 +274,22 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
         view.refreshWindow();
     }
-
     @Override
     public void AddText(TextModel txtModel) {
            drawTxt(txtModel);
 
     }
-
     @Override
     public void zoomIn(Point p) {
 
         zoom_in_out(1, p, true);
     }
-
     @Override
     public void zoomOut(Point p) {
 
 
         zoom_in_out(1, p, false);
     }
-
     @Override
     public void click(Point p) {
         if (view.isPointOnMaterial(p)) {
@@ -342,11 +330,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     @Override
     public void entered() {
-        if (ActiveBtns.text) {
-            view.getMaterial().setCursor(new Cursor(Cursor.TEXT_CURSOR));
-        } else {
-            view.getMaterial().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
+
     }
 
     @Override
@@ -365,12 +349,14 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     public void clickedPoint(PointModel p) {
             System.out.println("point Selected!");
             if(improvedToolBox.getActiveTool().toString()=="line"){
-                lineBegin(p.point);
+                lineBegin(p);
             }
     }
     public void showConnectPointsBtn(){
+
         board=view.getBoard();
         board.removePointBtns();
+        setALtoPoints();
         board.addPointBtns();
         view.refreshWindow();
 
@@ -387,7 +373,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
                 setTextPoint(p);
                 break;
             case "line":
-                lineBegin(p);
+                lineBegin(new PointModel(p));
                 followMouse=true;
                 break;
 
@@ -395,50 +381,29 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
 
     }
-
     private void mouseMovedFollow(Point p){
         switch (String.valueOf(getActiveTool())){
             case "txt":
                 break;
             case "line":
-                mouseFollowLn(p);
+                mouseFollowLn(new PointModel(p));
                 break;
 
         }
     }
-
     //----------------------------------------------------------------
 
-
-    public void lineClickPoint(PointModel p){
-           
-    }
-
-
-    public void lineBegin(Point p){
-       if(toolState!=ToolStatesE.lineClickDot){
-          if(toolState==ToolStatesE.lineTracking){
-
-          }
-       }
-       LineModel.preparePointLine(p,model);
-       if(LineModel.finished){
-           for (LineModel model: model.getLineModels()) {
-               model.pointBtnA.addActionListener(pointAL);
-               model.pointBtnB.addActionListener(pointAL);
-           }
-       }
-
-    }
-    public void mouseFollowLn(Point p){
-
-        if(!LineModel.started){return;}
-       LineModel.drawTempLine(p);
+    public void lineBegin(PointModel p){
+            System.out.println("line begin");
+       LineModel.lineBeginImproved(p,model);
        view.refreshWindow();
     }
+    public void mouseFollowLn(PointModel p){
 
+      LineModel.lineMoving(p);
+      view.refreshWindow();
 
-
+    }
     public void setTextPoint(Point p){
         TextModel.prepTxtLoc(new PointModel(p));
              DrawTextController txtController = new DrawTextController(this);
@@ -452,11 +417,22 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     }
     public void mouseFollowCircle(Point p){}
-
-
     public void mouseFollowPoint(Point p){}
 
 
+    private void setALtoPoints(){
+
+        for(LineModel ln: model.getLineModels()){
+            ln.pointBtnB.removeActionListener(pointAL);
+            ln.pointBtnA.removeActionListener(pointAL);
+            ln.pointBtnB.addActionListener(pointAL);
+            ln.pointBtnA.addActionListener(pointAL);
+        }
+
+
+
+
+    }
 }
 
 

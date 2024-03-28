@@ -45,9 +45,7 @@ public class LayerDrawingsModel {
     public void addTxt(TextModel modelTxt){
         texts.add(modelTxt);
     }
-    public void addPointBtn(PointBtn pointBtn) {
 
 
-    }
 
 }

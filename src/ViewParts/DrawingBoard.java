@@ -18,9 +18,6 @@ public class DrawingBoard extends ScalablePanel {
         this.setLayout(null);
     }
 
-    public DrawingBoard() {
-    }
-
     @Override
     public void paintComponent(Graphics g) {
 
