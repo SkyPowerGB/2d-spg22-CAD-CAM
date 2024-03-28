@@ -1,10 +1,11 @@
 package helpers;
 
 import helpers.enums.ToolNamesE;
+import helpers.enums.ToolStatesE;
 
 public  class improvedToolBox {
  static ToolNamesE activeTool;
-
+public static ToolStatesE toolState;
     public static ToolNamesE getActiveTool() {
         return activeTool;
     }
@@ -13,5 +14,11 @@ public  class improvedToolBox {
         improvedToolBox.activeTool = activeTool;
     }
 
+    public static ToolStatesE getToolState() {
+        return toolState;
+    }
 
+    public static void setToolState(ToolStatesE toolState) {
+        improvedToolBox.toolState = toolState;
+    }
 }

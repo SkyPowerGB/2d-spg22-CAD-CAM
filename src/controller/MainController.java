@@ -14,6 +14,7 @@ import controller.callbacks.NewFileCallBack;
 import controller.callbacks.PointPressedCallBack;
 import helpers.*;
 import helpers.enums.FileOptionsE;
+import helpers.enums.ToolStatesE;
 import helpers.helperModels.Line;
 import model.*;
 
@@ -409,8 +410,17 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     //----------------------------------------------------------------
 
 
-    public void lineBegin(Point p){
+    public void lineClickPoint(PointModel p){
+           
+    }
 
+
+    public void lineBegin(Point p){
+       if(toolState!=ToolStatesE.lineClickDot){
+          if(toolState==ToolStatesE.lineTracking){
+
+          }
+       }
        LineModel.preparePointLine(p,model);
        if(LineModel.finished){
            for (LineModel model: model.getLineModels()) {
