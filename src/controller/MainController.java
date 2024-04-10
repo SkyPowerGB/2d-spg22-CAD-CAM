@@ -335,7 +335,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     @Override
     public void moved(Point currPos) {
-        if(followMouse){
+        if(true){
             if(!view.isPointOnMaterial(currPos)){return;}
             currPos=view.recalcWorkspaceToMaterial(currPos);
             currPos=PointScaler.getDefaultPoint(currPos,view.getScale());
@@ -350,6 +350,8 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
             System.out.println("point Selected!");
             if(improvedToolBox.getActiveTool().toString()=="line"){
                 lineBegin(p);
+            }else if(improvedToolBox.getActiveTool()==ToolNamesE.selectPoint){
+                movePointSelect(p);
             }
     }
     public void showConnectPointsBtn(){
@@ -365,7 +367,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
   //draw stuff---------------------------------------------
 
-//main methods for starting operation*****------------
+//main methods for starting operation with tool****------------
     boolean followMouse=false;
     private void clickOnMaterial(Point p) {
         switch (String.valueOf(getActiveTool())){
@@ -377,6 +379,9 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
                 followMouse=true;
                 break;
 
+        }
+        if(activeTool==ToolNamesE.selectPoint){
+            movePointSelect(new PointModel(p));
         }
 
 
@@ -390,8 +395,12 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
                 break;
 
         }
+        if(activeTool== ToolNamesE.selectPoint){
+         movePointMouse(new PointModel(p));
+        }
     }
-    //----------------------------------------------------------------
+    //------------tool methods
+    // ----------------------------------------------------
 
     public void lineBegin(PointModel p){
             System.out.println("line begin");
@@ -411,6 +420,34 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     public void drawTxt(TextModel textModel){
             model.addTxt(textModel);
             view.refreshWindow();
+    }
+
+    PointModel pointToMove;
+    public void movePointSelect(PointModel p){
+        System.out.println("move point select");
+         if(toolState==ToolStatesE.inactive){
+             toolState=ToolStatesE.pointSelectMoving;
+             pointToMove=p;
+         }
+else if(toolState==ToolStatesE.pointSelectMoving){
+            pointToMove.setNewLocation(p);
+            pointToMove=null;
+            toolState=ToolStatesE.inactive;
+            view.refreshWindow();
+         }
+else if(true){
+
+
+         }
+
+
+
+    }
+    public void movePointMouse(PointModel p){
+        if(toolState==ToolStatesE.pointSelectMoving){
+            pointToMove.setNewLocation(p);
+            view.refreshWindow();
+        }
     }
 
     public void setCirclePoint(Point p){

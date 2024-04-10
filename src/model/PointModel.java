@@ -21,6 +21,13 @@ public class PointModel {
         this.y=y;
     }
 
+    public void setNewLocation(PointModel p){
+
+        this.point=p.point;
+        this.x= point.x;
+        this.y= point.y;
+
+    }
     public Point getScaledLocation(double scale){
         return new Point((int) (x*scale), (int) (y*scale));
     }

@@ -4,7 +4,7 @@ import helpers.enums.ToolNamesE;
 import helpers.enums.ToolStatesE;
 
 public  class improvedToolBox {
- static ToolNamesE activeTool;
+public static ToolNamesE activeTool;
 public static ToolStatesE toolState;
     public static ToolNamesE getActiveTool() {
         return activeTool;

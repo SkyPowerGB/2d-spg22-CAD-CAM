@@ -30,6 +30,10 @@ public class PointBtn extends JButton {
         this.setLocation(scaledLoc);
         this.setSize(new Dimension((int) (defaultDim.width*scale), (int) (defaultDim.height*scale)));
     }
+    public void resetLocation(){
+         point=modelPoint.point;
+         setLocation(point);
+    }
     @Override
     public void setLocation(@NotNull Point p) {
         p=new Point(p.x-(getWidth()/2),p.y-(getHeight()/2));

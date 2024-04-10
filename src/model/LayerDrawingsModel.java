@@ -10,11 +10,14 @@ public class LayerDrawingsModel {
     ArrayList<LineModel> lineModels;
     ArrayList<TextModel> texts;
 
+    ArrayList<CircleModel> circles;
+
 
     public LayerDrawingsModel(){
 
         lineModels=new ArrayList<>();
         texts=new ArrayList<>();
+        circles=new ArrayList<>();
 
     }
 
@@ -46,6 +49,24 @@ public class LayerDrawingsModel {
         texts.add(modelTxt);
     }
 
+    public ArrayList<CircleModel> getCircles() {
+        return circles;
+    }
+
+    public void removeCircle(CircleModel circle){ circles.remove(circle);}
+    public void updateCircleEndpoint(CircleModel circle , PointModel point){
+        for (CircleModel circ:circles) {
+            if(circle==circ){
+                circ.endPoint.setNewLocation(point);
+            }
+        }
+    }
+    public void resetBtnsLocation(){
+        for (LineModel ln:lineModels) {
+            ln.resetPointBtnsLocation();
+        }
+
+    }
 
 
 }

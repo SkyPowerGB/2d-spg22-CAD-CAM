@@ -152,4 +152,9 @@ public class LineModel {
 
     }
 
+    public void resetPointBtnsLocation(){
+        pointBtnA.resetLocation();
+        pointBtnB.resetLocation();
+    }
+
 }

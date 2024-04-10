@@ -346,6 +346,7 @@ public class MainView {
     }
 
     public void refreshWindow() {
+        board.getModel().resetBtnsLocation();
         mainFrame.refresh();
     }
 
