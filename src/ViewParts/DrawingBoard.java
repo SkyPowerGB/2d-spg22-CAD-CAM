@@ -42,11 +42,7 @@ public class DrawingBoard extends ScalablePanel {
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        for(TextModel txt: model.getTexts()){
-            g2d.setFont(txt.getScaledFont(super.scale));
-            PointModel txtLox=txt.getScaledLoc(super.scale);
-            g2d.drawString(txt.getTxt(),txtLox.x,txtLox.y);
-        }
+
 
     }
 

@@ -6,9 +6,6 @@ public class Line {
     private double k = 0;
     private double l = 0;
 
-    private int verticalRise;
-
-    private boolean vertical;
 
 
     public Line(Point a, Point b) {

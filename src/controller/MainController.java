@@ -3,12 +3,10 @@ package controller;
 import View.MainView;
 import ViewParts.DrawingBoard;
 import ViewParts.LayerPanel;
-import ViewParts.TextPropertiesPanel;
 import controller.AEclasses.PointAL;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.AEclasses.WorkspaceMouseWheelListener;
-import controller.callbacks.AddTextCallback;
 import controller.callbacks.MouseCallBacks;
 import controller.callbacks.NewFileCallBack;
 import controller.callbacks.PointPressedCallBack;
@@ -29,9 +27,9 @@ import helpers.enums.ToolNamesE;
 
 import static helpers.improvedToolBox.*;
 
-public class MainController implements NewFileCallBack, AddTextCallback, MouseCallBacks, PointPressedCallBack {
+public class MainController implements NewFileCallBack, MouseCallBacks, PointPressedCallBack {
     MainView view;
-    TextPropertiesPanel textPropertiesPanel;
+
     WorkspaceMouseWheelListener mouseWheelListener;
     WorkspaceMouseMotionListener mouseMotionListener;
     WorkspaceMouseListener workspaceMouseListener;
@@ -42,7 +40,6 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     FileData data;
     DrawingBoard board;
 
-    Point lineP1;
     int currLineIndex = -1;
 
     private boolean middleButtonPressed;
@@ -51,16 +48,19 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
     public MainController() {
 
+        // prep callbacks---------------------------------------------------------------------------------
         mouseWheelListener = new WorkspaceMouseWheelListener(this);
         workspaceMouseListener = new WorkspaceMouseListener(this);
         mouseMotionListener = new WorkspaceMouseMotionListener(this);
-
         pointAL = new PointAL(this);
 
 
-
+        // create view
         view = new MainView();
 
+
+
+        // get  buttons and setup their listeners -------------------------------------------------
         ArrayList<JMenuItem> menuOptions = view.getMenuOptions();
 
         ArrayList<JButton> toolBtns = view.getToolBtns();
@@ -82,6 +82,8 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
             });
         }
 
+        // get workspace + add listeners ------------------------------------------------------------------------
+
         JPanel workspace = view.getWorkspacePanel();
 
         workspace.addMouseWheelListener(mouseWheelListener);
@@ -90,15 +92,20 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
         workspace.addMouseMotionListener(mouseMotionListener);
 
+
+        // select layer btn
         view.getAddLayerBtn().addActionListener(e -> {
             addLayer();
         });
 
+        // point connect helper tool
         view.getWorkspaceShowPointsBtn().addActionListener(e->{showConnectPointsBtn();});
 
-
+      //--------------------------------------------------------------------------------
 
     }
+    //-------  prepare layers map----------------------------------------------------------
+
     TreeMap<Double, LayerPanel>    layers = new TreeMap<Double, LayerPanel>();
     private void addLayer() {
 
@@ -153,6 +160,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
         layers.forEach((k,l)-> view.addLayer(l));
 
     }
+
     private void selectLayer(String index) {
         int i = Integer.parseInt(index);
         board.removePointBtns();
@@ -274,11 +282,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
 
         view.refreshWindow();
     }
-    @Override
-    public void AddText(TextModel txtModel) {
-           drawTxt(txtModel);
 
-    }
     @Override
     public void zoomIn(Point p) {
 
@@ -372,7 +376,7 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
     private void clickOnMaterial(Point p) {
         switch (String.valueOf(getActiveTool())){
             case "txt":
-                setTextPoint(p);
+
                 break;
             case "line":
                 lineBegin(new PointModel(p));
@@ -413,14 +417,6 @@ public class MainController implements NewFileCallBack, AddTextCallback, MouseCa
       view.refreshWindow();
 
     }
-    public void setTextPoint(Point p){
-        TextModel.prepTxtLoc(new PointModel(p));
-             DrawTextController txtController = new DrawTextController(this);
-    }
-    public void drawTxt(TextModel textModel){
-            model.addTxt(textModel);
-            view.refreshWindow();
-    }
 
     PointModel pointToMove;
     public void movePointSelect(PointModel p){
@@ -450,11 +446,6 @@ else if(true){
         }
     }
 
-    public void setCirclePoint(Point p){
-
-    }
-    public void mouseFollowCircle(Point p){}
-    public void mouseFollowPoint(Point p){}
 
 
     private void setALtoPoints(){

@@ -350,22 +350,6 @@ public class MainView {
         mainFrame.refresh();
     }
 
-    public void addUpperOptionsPanel(JPanel panel) {
-        upperPanel.add(panel);
-        mainFrame.refresh();
-    }
-
-    public void removeUpperOptionsPanel(JPanel panel) {
-        upperPanel.remove(panel);
-        mainFrame.refresh();
-    }
-
-    public void materialAddJPanel(ScalablePanel panel) {
-        materialLayers.add(panel, JLayeredPane.PALETTE_LAYER);
-        scalablePanels.add(panel);
-        this.refreshWindow();
-
-    }
 
     public Point recalcWorkspaceToMaterial(Point p) {
         Point matLoc = material.getLocation();
@@ -393,5 +377,5 @@ public class MainView {
         return  showConnectPoints;
     }
 
-    public void startLine(){}
+
 }

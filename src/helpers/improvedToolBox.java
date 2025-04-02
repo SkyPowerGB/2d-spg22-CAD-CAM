@@ -14,11 +14,7 @@ public static ToolStatesE toolState;
         improvedToolBox.activeTool = activeTool;
     }
 
-    public static ToolStatesE getToolState() {
-        return toolState;
-    }
 
-    public static void setToolState(ToolStatesE toolState) {
-        improvedToolBox.toolState = toolState;
-    }
+
+
 }

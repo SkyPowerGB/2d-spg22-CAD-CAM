@@ -19,12 +19,6 @@ public class Span {
         return false;
     }
 
-    public static Point getOtherPoint(Point location,Dimension size){
-        return new Point(location.x+ size.width,location.y+size.width);
-    }
 
-    public static Point offsetPoint(Point fromPoint , Point toPoint){
-        return new Point((fromPoint.x-toPoint.x),(fromPoint.y-toPoint.y));
-    }
 
 }

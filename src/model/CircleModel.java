@@ -7,7 +7,7 @@ public class CircleModel {
 
     boolean fill=false;
 
-    BasicStroke lineProps;
+
 
 
     double radius;
