@@ -2,12 +2,12 @@ package helpers;
 
 import java.awt.*;
 
-public class ZdepthMap {
+public class DepthColorMap {
     double maxD;
     double maxSteps;
     double resolution;
 
-    public ZdepthMap(double dim, double resolution) {
+    public DepthColorMap(double dim, double resolution) {
         maxD = dim;
 
         maxSteps = dim / resolution;

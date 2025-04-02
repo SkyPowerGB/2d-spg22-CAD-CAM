@@ -3,7 +3,6 @@ package ViewParts;
 import model.*;
 
 import java.awt.*;
-import java.awt.geom.Line2D;
 
 public class DrawingBoard extends ScalablePanel {
 
@@ -30,15 +29,6 @@ public class DrawingBoard extends ScalablePanel {
             model1.pointBtnB.setScale(super.scale);
         }
 
-        for (CircleModel circle:model.getCircles()){
-            Point circlePos=circle.getStartPoint();
-            if(circle.isFill()){
-
-                g2d.fillOval(circlePos.x,circlePos.y, (int) circle.getRadius(), (int) circle.getRadius());
-            }else{
-                g2d.drawOval(circlePos.x,circlePos.y, (int) circle.getRadius(), (int) circle.getRadius());
-            }
-        }
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -73,7 +63,7 @@ public class DrawingBoard extends ScalablePanel {
         }
 
     }
-    public void removePointBtns(){
+    public void removeAllUComponents(){
         this.removeAll();
     }
 }

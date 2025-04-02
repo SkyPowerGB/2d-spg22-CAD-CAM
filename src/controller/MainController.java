@@ -2,7 +2,6 @@ package controller;
 
 import View.MainView;
 import ViewParts.DrawingBoard;
-import ViewParts.LayerPanel;
 import controller.AEclasses.PointAL;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
@@ -13,15 +12,13 @@ import controller.callbacks.PointPressedCallBack;
 import helpers.*;
 import helpers.enums.FileOptionsE;
 import helpers.enums.ToolStatesE;
-import helpers.helperModels.Line;
+import helpers.helperModels.LineEqCalculator;
 import model.*;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import helpers.enums.ToolNamesE;
 
@@ -33,13 +30,15 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     WorkspaceMouseWheelListener mouseWheelListener;
     WorkspaceMouseMotionListener mouseMotionListener;
     WorkspaceMouseListener workspaceMouseListener;
-    LayerDrawingsModel model;
+
     PointAL pointAL;
 
 
-    FileData data;
+
+    FileDataModel data;
     DrawingBoard board;
 
+    LayerController layerController=new LayerController(view,data);
     int currLineIndex = -1;
 
     private boolean middleButtonPressed;
@@ -58,6 +57,7 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
         // create view
         view = new MainView();
 
+        layerController.setMainView(view);
 
 
         // get  buttons and setup their listeners -------------------------------------------------
@@ -95,7 +95,7 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
 
         // select layer btn
         view.getAddLayerBtn().addActionListener(e -> {
-            addLayer();
+            layerController.addLayer();
         });
 
         // point connect helper tool
@@ -106,78 +106,12 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     }
     //-------  prepare layers map----------------------------------------------------------
 
-    TreeMap<Double, LayerPanel>    layers = new TreeMap<Double, LayerPanel>();
-    private void addLayer() {
-
-        if (data == null) {
-            JOptionPane.showMessageDialog(null, "Please create file");
-            return;
-        }
-        String input = JOptionPane.showInputDialog(null, "Enter layer height in mm");
-        double out;
-        try {
-            out = Double.parseDouble(input);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid input");
-            return;
-        }
-        if (out == 0) {
-            JOptionPane.showMessageDialog(null, "Putting 0 depth?");
-            return;
-        }
-        ZdepthMap map = new ZdepthMap(data.materialThickness, 0.1);
-        if (Layers.layerHeightExists(out)) {
-            JOptionPane.showMessageDialog(null, "Layer at that height already exists");
-            return;
-        }
-        LayerPanel layer = new LayerPanel(out);
-        layer.setPreferredSize(new Dimension(90, 50));
-        layer.setBackground(Color.gray);
-        layer.setLayout(null);
-        layer.setBorder(new BevelBorder(BevelBorder.LOWERED));
-
-
-        int index = Layers.addLayer(layer);
-        JButton btn = new JButton();
-
-        btn.setSize(layer.getPreferredSize());
-        btn.setName(String.valueOf(index));
-        btn.setBackground(null);
-        btn.setBackground(map.getHeightColor(out));
-        btn.setText(String.valueOf(out));
-        layer.setLayerBtn(btn);
-        btn.addActionListener(e -> {
-            selectLayer((((JButton) e.getSource()).getName()));
-        });
-
-
-
-        layers.put(out, layer);
-
-        view.removeLayers();
-        layer.add(btn);
-        layers.forEach((k,l)-> view.addLayer(l));
-
-    }
-
-    private void selectLayer(String index) {
-        int i = Integer.parseInt(index);
-        board.removePointBtns();
-        Layers.activeLayer = i;
-        Layers.enableAllBtns();
-        Layers.getPanel(i).getLayerBtn().setEnabled(false);
-        System.out.println("select layer: " + i);
-          model= Layers.getLayerModel();
-          view.boardSetDrawingsModel(model);
-
-    }
-
     private void menuOptionClicked(String name) {
 
 
         if (name.contentEquals(FileOptionsE.new_file.toString())) {
             NewFileController controllerB = new NewFileController(this);
+            System.out.println("newFileCreated");
         }
     }
 
@@ -195,7 +129,7 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
             relation = 4;
         }
 
-        Line ln;
+        LineEqCalculator ln;
 
         double moveX = view.getMaterial().getSize().getWidth() * (ammount / 2);
 
@@ -205,9 +139,9 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
         Point materialPos = view.getMaterialPos();
 
         if (relation == 3 || relation == 4) {
-            ln = new Line(position, materialPos);
+            ln = new LineEqCalculator(position, materialPos);
         } else {
-            ln = new Line(materialPos, position);
+            ln = new LineEqCalculator(materialPos, position);
         }
 
 
@@ -244,14 +178,18 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     }
     //callbacks
     @Override
-    public void onFileCreate(FileData data) {
+    public void onFileCreate(FileDataModel data) {
         this.data = data;
+        layerController.setFileData(data);
         view.addMaterial(data);
         view.refreshWindow();
         board = view.getBoard();
-        model = board.getModel();
+
+        layerController.setBoard(board);
+        layerController.setMainView(view);
         currLineIndex = -1;
     }
+
     public void toolBtnPressed(JButton btn) {
 
 
@@ -361,7 +299,7 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     public void showConnectPointsBtn(){
 
         board=view.getBoard();
-        board.removePointBtns();
+        board.removeAllUComponents();
         setALtoPoints();
         board.addPointBtns();
         view.refreshWindow();
@@ -406,14 +344,14 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     //------------tool methods
     // ----------------------------------------------------
 
-    public void lineBegin(PointModel p){
+    public void lineBegin(PointModel point){
             System.out.println("line begin");
-       LineModel.lineBeginImproved(p,model);
+       LineModel.lineBeginImproved(point, layerController.getLayerDrawingsModel());
        view.refreshWindow();
     }
-    public void mouseFollowLn(PointModel p){
+    public void mouseFollowLn(PointModel point){
 
-      LineModel.lineMoving(p);
+      LineModel.lineMoving(point);
       view.refreshWindow();
 
     }
@@ -450,7 +388,7 @@ else if(true){
 
     private void setALtoPoints(){
 
-        for(LineModel ln: model.getLineModels()){
+        for(LineModel ln: layerController.getLayerDrawingsModel().getLineModels()){
             ln.pointBtnB.removeActionListener(pointAL);
             ln.pointBtnA.removeActionListener(pointAL);
             ln.pointBtnB.addActionListener(pointAL);

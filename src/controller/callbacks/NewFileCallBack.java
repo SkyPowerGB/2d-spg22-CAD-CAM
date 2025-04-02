@@ -1,7 +1,7 @@
 package controller.callbacks;
 
-import model.FileData;
+import model.FileDataModel;
 
 public interface NewFileCallBack {
-    void onFileCreate(FileData data);
+    void onFileCreate(FileDataModel data);
 }

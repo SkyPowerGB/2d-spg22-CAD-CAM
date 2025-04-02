@@ -2,19 +2,17 @@ package helpers.helperModels;
 
 import java.awt.*;
 
-public class Line {
+public class LineEqCalculator {
     private double k = 0;
     private double l = 0;
 
 
 
-    public Line(Point a, Point b) {
+    public LineEqCalculator(Point a, Point b) {
         calcKL(a, b);
     }
 
-    public Line(int x, int y, int x2, int y2) {
-        calcKL(new Point(x, y), new Point(x2, y2));
-    }
+
 
     private void calcKL(Point a, Point b) {
 

@@ -23,11 +23,7 @@ public class ScalablePanel extends JPanel {
         this.originalHeight=dimension.height;
     }
 
-    public void setDefaultPreferredSize(Dimension dimension){
-        super.setPreferredSize(dimension);
-        this.originalWidth=dimension.width;
-        this.originalHeight=dimension.height;
-    }
+
     public void setScale(double scale) {
 
         this.scale = scale;
@@ -36,14 +32,6 @@ public class ScalablePanel extends JPanel {
 
     }
 
-    public void setScalePreferred(double scale){
-        this.scale = scale;
-        super.setPreferredSize(new Dimension((int) (originalWidth*scale), (int) (originalHeight*scale)));
-    }
-
-    public Dimension getDefaultSize(){
-        return new Dimension(originalWidth,originalHeight);
-    }
 
 
 

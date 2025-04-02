@@ -1,10 +1,10 @@
 package model;
 
-public class DimensionDouble {
+public class DimensionDoubleModel {
     private double width;
     private double height;
 
-    public DimensionDouble(double width, double height) {
+    public DimensionDoubleModel(double width, double height) {
         this.width = width;
         this.height = height;
     }
@@ -13,15 +13,10 @@ public class DimensionDouble {
         return width;
     }
 
-    public void setWidth(double width) {
-        this.width = width;
-    }
 
     public double getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
-        this.height = height;
-    }
+
 }

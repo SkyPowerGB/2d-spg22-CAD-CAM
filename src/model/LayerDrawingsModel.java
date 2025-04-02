@@ -9,14 +9,12 @@ public class LayerDrawingsModel {
 
     ArrayList<LineModel> lineModels;
 
-    ArrayList<CircleModel> circles;
 
 
     public LayerDrawingsModel(){
 
         lineModels=new ArrayList<>();
 
-        circles=new ArrayList<>();
 
     }
 
@@ -35,9 +33,7 @@ public class LayerDrawingsModel {
     }
 
 
-    public ArrayList<CircleModel> getCircles() {
-        return circles;
-    }
+
 
 
     public void resetBtnsLocation(){

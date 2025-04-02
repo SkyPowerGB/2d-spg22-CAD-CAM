@@ -1,6 +1,6 @@
 package model;
 
-public class FileData {
+public class FileDataModel {
     public double materialThickness;
 
     public boolean fullSpace;
@@ -9,10 +9,8 @@ public class FileData {
 
     public String material;
 
-    public DimensionDouble materialDim;
+    public DimensionDoubleModel materialDim;
 
-    //velicina mm
-    public double unitSize;
 
 
 }

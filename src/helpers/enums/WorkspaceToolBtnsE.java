@@ -1,5 +1,5 @@
 package helpers.enums;
 
-public enum WrkSpcNavPanBtnsE {
+public enum WorkspaceToolBtnsE {
     scaleDefault,showConnectDots,locZZ
 }

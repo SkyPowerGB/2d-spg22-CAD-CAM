@@ -1,6 +1,6 @@
 package View;
 
-import model.DimensionDouble;
+import model.DimensionDoubleModel;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -62,19 +62,19 @@ public class NewFile extends JFrame{
         }
     }
 // TU BU TRELO ZA CONFIGURACIJU SLOZITI velicina masine
-    public DimensionDouble getWorkspaceDim(){
+    public DimensionDoubleModel getWorkspaceDim(){
         if(startAtHome()){
-            return  new DimensionDouble(100,100);
+            return  new DimensionDoubleModel(100,100);
         }
         try{
             double x=Double.parseDouble(materialXTf.getText());
             double y=Double.parseDouble(materialYTf.getText());
-            return new DimensionDouble(x,y);
+            return new DimensionDoubleModel(x,y);
 
         }catch(Exception e){
             showError("DimensionXY inputs not valid format");
             errorVar=true;
-            return  new DimensionDouble(0,0);
+            return  new DimensionDoubleModel(0,0);
         }
     }
 

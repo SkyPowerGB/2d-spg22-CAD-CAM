@@ -1,7 +1,7 @@
 package helpers;
 
 import helpers.enums.ToolNamesE;
-import helpers.enums.WrkSpcNavPanBtnsE;
+import helpers.enums.WorkspaceToolBtnsE;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,9 @@ public class TextureHelper {
         return new ImageIcon(resized);
     }
 
-    public static ImageIcon getControlBtnTexture(WrkSpcNavPanBtnsE btn,int size){
+
+    // workspace tool btns get texture
+    public static ImageIcon getControlBtnTexture(WorkspaceToolBtnsE btn, int size){
         String folderPath=resourcesFolder+"/workspaceNavBtns/";
         ImageIcon icon=new ImageIcon(folderPath+btn.toString()+".png");
         return getScaled(icon,size,size);

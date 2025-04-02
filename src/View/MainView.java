@@ -4,12 +4,11 @@ import ViewParts.*;
 import helpers.TextureHelper;
 import helpers.enums.FileOptionsE;
 import helpers.enums.ToolNamesE;
-import helpers.enums.WrkSpcNavPanBtnsE;
+import helpers.enums.WorkspaceToolBtnsE;
 import helpers.enums.menuItemsE;
-import helpers.helperModels.Span;
-import model.FileData;
+import helpers.helperModels.RectangleSpanHelper;
+import model.FileDataModel;
 import model.LayerDrawingsModel;
-import model.Layers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,7 @@ public class MainView {
     JPanel workspacePanel;
     JPanel leftPanel;
     JPanel toolPanel;
-    JPanel toolOptions;
+
     JPanel workspaceNavigationPanel;
 
     JButton addLayerBtn;
@@ -41,7 +40,7 @@ public class MainView {
     LabeledInput zStep;
     ArrayList<JButton> toolBtns;
     JPanel rightSidePanel;
-    JPanel upperPanel;
+    JPanel workspaceToolsTopPanel;
     JMenuBar menuBar;
     ArrayList<JMenu> menuItems;
     ArrayList<JMenuItem> menuOptions;
@@ -112,14 +111,14 @@ public class MainView {
 
         leftPanel = new JPanel();
         rightSidePanel = new JPanel();
-        upperPanel = new JPanel();
+        workspaceToolsTopPanel = new JPanel();
         programPanel = new JPanel();
         menuBar = new JMenuBar();
         menuItems = new ArrayList<>();
         menuOptions = new ArrayList<>();
         toolBtns = new ArrayList<>();
         toolPanel = new JPanel();
-        toolOptions = new JPanel();
+
         leftScrollPane = new JScrollPane();
 
         vectorLayer = new JPanel();
@@ -173,7 +172,7 @@ public class MainView {
 
 
         Dimension frameSize = mainFrame.getSize();
-        mainFrame.setTitle("2D SPG-22 CAM");
+        mainFrame.setTitle("2.5D SP-24 CAD/CAM");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setJMenuBar(menuBar);
 
@@ -185,37 +184,40 @@ public class MainView {
         leftPanel.setBackground(Color.cyan);
         leftPanel.setPreferredSize(new Dimension(200, frameSize.height));
         leftPanel.setLayout(new BorderLayout());
-        leftPanel.add(toolOptions, BorderLayout.SOUTH);
+
         leftPanel.add(toolPanel, BorderLayout.WEST);
         leftPanel.add(layersGroupPanel, BorderLayout.EAST);
 
 
+
         rightSidePanel.setBackground(Color.ORANGE);
         rightSidePanel.setPreferredSize(new Dimension(100, frameSize.height));
+        rightSidePanel.setToolTipText("RightSidePanel");
 
-        upperPanel.setBackground(Color.blue);
-        upperPanel.setPreferredSize(new Dimension(frameSize.width, 50));
-        upperPanel.setLayout(new GridLayout(1,20));
+        workspaceToolsTopPanel.setBackground(Color.blue);
+        workspaceToolsTopPanel.setPreferredSize(new Dimension(frameSize.width, 50));
+        workspaceToolsTopPanel.setLayout(new GridLayout(1,20));
+        workspaceToolsTopPanel.setToolTipText("workspaceTools");
 
         workspaceNavigationPanel =new JPanel();
         workspaceNavigationPanel.setLayout(new GridLayout(1,3));
         workspaceNavigationPanel.setBackground(Color.cyan);
 ;
 
-        int wkspcNavBtnsSIze=60;
+        int wrkSpcToolsBtnSize =60;
 
         workspaceHomeLoc = new JButton();
-        workspaceHomeLoc.setIcon(TextureHelper.getControlBtnTexture(WrkSpcNavPanBtnsE.locZZ,wkspcNavBtnsSIze));
+        workspaceHomeLoc.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.locZZ, wrkSpcToolsBtnSize));
 
         showConnectPoints=new JButton();
-        showConnectPoints.setIcon(TextureHelper.getControlBtnTexture(WrkSpcNavPanBtnsE.showConnectDots,wkspcNavBtnsSIze));
+        showConnectPoints.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.showConnectDots, wrkSpcToolsBtnSize));
 
          hideConnectPoints=new JButton();
          hideConnectPoints.addActionListener(e->{board.removeAll(); mainFrame.refresh();});
 
 
         workspaceScaleDefault=new JButton();
-        workspaceScaleDefault.setIcon(TextureHelper.getControlBtnTexture(WrkSpcNavPanBtnsE.scaleDefault,wkspcNavBtnsSIze));
+        workspaceScaleDefault.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.scaleDefault, wrkSpcToolsBtnSize));
 
         workspaceScaleDefault.addActionListener(e->{setScale(1);});
         workspaceHomeLoc.addActionListener(e->{material.setLocation(0,0);});
@@ -228,9 +230,9 @@ public class MainView {
 
 
 
-       upperPanel.add(new JPanel());
-        upperPanel.add(workspaceNavigationPanel);
-        upperPanel.add(new JPanel());
+       workspaceToolsTopPanel.add(new JPanel());
+        workspaceToolsTopPanel.add(workspaceNavigationPanel);
+        workspaceToolsTopPanel.add(new JPanel());
 
 
 
@@ -241,7 +243,7 @@ public class MainView {
 
         programPanel.add(leftPanel, BorderLayout.WEST);
         programPanel.add(rightSidePanel, BorderLayout.EAST);
-        programPanel.add(upperPanel, BorderLayout.NORTH);
+        programPanel.add(workspaceToolsTopPanel, BorderLayout.NORTH);
         programPanel.add(workspacePanel, BorderLayout.CENTER);
         programPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -252,7 +254,7 @@ public class MainView {
         mainFrame.add(programPanel);
         mainFrame.setVisible(true);
     }
-    public void addMaterial(FileData data) {
+    public void addMaterial(FileDataModel data) {
         Dimension materialDim = new Dimension(((int) data.materialDim.getWidth() * 10),
                 ((int) data.materialDim.getHeight() * 10));
         materialOriginalDim = materialDim;
@@ -317,11 +319,11 @@ public class MainView {
         return material;
     }
 
-    public Span getMaterialSpan() {
+    public RectangleSpanHelper getMaterialSpan() {
         Point matP = material.getLocation();
         Point matE = new Point(matP.x + material.getWidth(), matP.y + material.getHeight());
 
-        return new Span(matP, matE);
+        return new RectangleSpanHelper(matP, matE);
     }
 
     public Point getMaterialPos() {
@@ -329,7 +331,7 @@ public class MainView {
     }
 
     public boolean isPointOnMaterial(Point p) {
-        return getMaterialSpan().isPointInSpan(p);
+        return getMaterialSpan().isPointInRectangle(p);
     }
 
     public void setMaterialLoc(Point p) {

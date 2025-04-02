@@ -2,8 +2,7 @@ package controller;
 
 import View.NewFile;
 import controller.callbacks.NewFileCallBack;
-import model.DimensionDouble;
-import model.FileData;
+import model.FileDataModel;
 
 public class NewFileController {
     private NewFileCallBack callBack;
@@ -15,19 +14,19 @@ public class NewFileController {
 view2.getCreateBtn().addActionListener(e-> {onCreateNewFileClick();});
     }
    public void onCreateNewFileClick(){
-        FileData fileData =new FileData();
+        FileDataModel fileDataModel =new FileDataModel();
 
-       fileData.materialThickness=view2.getMaterialHeight();
-       fileData.fileName= view2.getFileName();
-       fileData.material= view2.getMaterialPreset();
-       fileData.fullSpace=view2.startAtHome();
-      fileData.materialDim=view2.getWorkspaceDim();
+       fileDataModel.materialThickness=view2.getMaterialHeight();
+       fileDataModel.fileName= view2.getFileName();
+       fileDataModel.material= view2.getMaterialPreset();
+       fileDataModel.fullSpace=view2.startAtHome();
+      fileDataModel.materialDim=view2.getWorkspaceDim();
 
 
 
         if(view2.errorVar){return;}
 
         view2.dispose();
-        callBack.onFileCreate(fileData);
+        callBack.onFileCreate(fileDataModel);
     }
 }

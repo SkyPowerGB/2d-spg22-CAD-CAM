@@ -23,7 +23,5 @@ public class LayerPanel extends JPanel {
         this.layerBtn = layerBtn;
     }
 
-    public void setLayerZheight(double layerZheight) {
-        this.LayerZheight = layerZheight;
-    }
+
 }
