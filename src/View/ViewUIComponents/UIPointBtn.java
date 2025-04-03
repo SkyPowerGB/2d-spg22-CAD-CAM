@@ -1,14 +1,12 @@
-package ViewParts;
+package View.ViewUIComponents;
 
-import controller.AEclasses.PointAL;
-import controller.callbacks.PointPressedCallBack;
 import model.PointModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PointBtn extends JButton {
+public class UIPointBtn extends JButton {
     Point point;
 
     PointModel modelPoint;
@@ -17,7 +15,7 @@ public class PointBtn extends JButton {
     Dimension defaultDim;
 
 
-    public PointBtn(PointModel modelPoint,int size){
+    public UIPointBtn(PointModel modelPoint, int size){
         this.modelPoint=modelPoint;
         defaultDim=new Dimension(size,size);
         this.setSize(defaultDim);
@@ -30,12 +28,16 @@ public class PointBtn extends JButton {
         this.setLocation(scaledLoc);
         this.setSize(new Dimension((int) (defaultDim.width*scale), (int) (defaultDim.height*scale)));
     }
+
+    //reset ui position to match point pos
     public void resetLocation(){
+
          point=modelPoint.point;
          setLocation(point);
     }
     @Override
     public void setLocation(@NotNull Point p) {
+        //adjust point so that button is in center
         p=new Point(p.x-(getWidth()/2),p.y-(getHeight()/2));
 
 
@@ -46,8 +48,16 @@ public class PointBtn extends JButton {
         return modelPoint;
     }
 
-    public boolean isSamePoint(PointModel p){
-        if(this.modelPoint==p){
+    public void setModelPoint(PointModel modelPoint){
+        this.modelPoint=modelPoint;
+        resetLocation();
+    }
+
+    public boolean isSamePoint(PointModel referencePoint){
+        if(this.modelPoint==referencePoint){
+            return true;
+        }
+        if( (this.modelPoint.x==referencePoint.x)&&this.modelPoint.y== referencePoint.y ){
             return true;
         }
         return false;

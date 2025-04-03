@@ -1,18 +1,16 @@
 package controller;
 
 import View.MainView;
-import ViewParts.DrawingBoard;
+import View.ViewUIComponents.DrawingBoard;
 import controller.AEclasses.PointAL;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
-import controller.AEclasses.WorkspaceMouseWheelListener;
 import controller.callbacks.MouseCallBacks;
 import controller.callbacks.NewFileCallBack;
 import controller.callbacks.PointPressedCallBack;
 import helpers.*;
 import helpers.enums.FileOptionsE;
 import helpers.enums.ToolStatesE;
-import helpers.helperModels.LineEqCalculator;
 import model.*;
 
 import javax.swing.*;
@@ -22,12 +20,12 @@ import java.util.ArrayList;
 
 import helpers.enums.ToolNamesE;
 
-import static helpers.improvedToolBox.*;
+import static helpers.ToolTracker.*;
 
 public class MainController implements NewFileCallBack, MouseCallBacks, PointPressedCallBack {
     MainView view;
 
-    WorkspaceMouseWheelListener mouseWheelListener;
+
     WorkspaceMouseMotionListener mouseMotionListener;
     WorkspaceMouseListener workspaceMouseListener;
 
@@ -39,16 +37,16 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     DrawingBoard board;
 
     LayerController layerController=new LayerController(view,data);
-    int currLineIndex = -1;
+    PanningController panningController;
+    ZoomController zoomController;
+    ToolController toolController;
 
-    private boolean middleButtonPressed;
-    private int prevX, prevY;
-    private int offsetX, offsetY;
+
 
     public MainController() {
 
         // prep callbacks---------------------------------------------------------------------------------
-        mouseWheelListener = new WorkspaceMouseWheelListener(this);
+
         workspaceMouseListener = new WorkspaceMouseListener(this);
         mouseMotionListener = new WorkspaceMouseMotionListener(this);
         pointAL = new PointAL(this);
@@ -57,7 +55,12 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
         // create view
         view = new MainView();
 
-        layerController.setMainView(view);
+            zoomController =new ZoomController(view);
+            panningController=new PanningController(view);
+
+
+            layerController.setMainView(view);
+
 
 
         // get  buttons and setup their listeners -------------------------------------------------
@@ -86,7 +89,7 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
 
         JPanel workspace = view.getWorkspacePanel();
 
-        workspace.addMouseWheelListener(mouseWheelListener);
+
 
         workspace.addMouseListener(workspaceMouseListener);
 
@@ -106,6 +109,9 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     }
     //-------  prepare layers map----------------------------------------------------------
 
+
+    // TO DO razdvojit main controller na: zooming,panning,tools ->(line,),file,
+
     private void menuOptionClicked(String name) {
 
 
@@ -115,79 +121,17 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
         }
     }
 
-    public void zoom_in_out(int factor, Point position, boolean dir) {
-        double ammount = 0.1;
-        byte relation = 0;
-        Point workspacePos = view.getMaterialPos();
-        if (workspacePos.x > position.x && workspacePos.y > position.y) {
-            relation = 1;
-        } else if (workspacePos.x > position.x && workspacePos.y < position.y) {
-            relation = 2;
-        } else if (workspacePos.x < position.x && workspacePos.y < position.y) {
-            relation = 3;
-        } else if (workspacePos.x < position.x && workspacePos.y > position.y) {
-            relation = 4;
-        }
-
-        LineEqCalculator ln;
-
-        double moveX = view.getMaterial().getSize().getWidth() * (ammount / 2);
-
-        int nextX;
-
-
-        Point materialPos = view.getMaterialPos();
-
-        if (relation == 3 || relation == 4) {
-            ln = new LineEqCalculator(position, materialPos);
-        } else {
-            ln = new LineEqCalculator(materialPos, position);
-        }
-
-
-        double scale = view.getScale();
-
-        if (scale <= 0.2) {
-            scale = 0.3;
-
-            view.setScale(scale);
-
-
-            view.refreshWindow();
-            return;
-        }
-
-        if (dir) {
-            nextX = (int) moveX + materialPos.x;
-            scale = scale + ammount;
-        } else {
-            nextX = materialPos.x - (int) moveX;
-            scale = scale - ammount;
-        }
-
-
-        int nexY = ln.calcY(nextX);
-
-        Point newLoc = new Point(nextX, nexY);
-        view.setMaterialLoc(newLoc);
-        view.setScale(scale);
-
-        view.refreshWindow();
-
-
-    }
     //callbacks
     @Override
     public void onFileCreate(FileDataModel data) {
         this.data = data;
-        layerController.setFileData(data);
-        view.addMaterial(data);
-        view.refreshWindow();
-        board = view.getBoard();
+        LayersDataStorageModel.setFileData(data);
+        layerController.setFileData(LayersDataStorageModel.getFileData());
 
-        layerController.setBoard(board);
-        layerController.setMainView(view);
-        currLineIndex = -1;
+        view.addMaterial(LayersDataStorageModel.getFileData());
+        view.refreshWindow();
+
+
     }
 
     public void toolBtnPressed(JButton btn) {
@@ -221,17 +165,8 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
         view.refreshWindow();
     }
 
-    @Override
-    public void zoomIn(Point p) {
-
-        zoom_in_out(1, p, true);
-    }
-    @Override
-    public void zoomOut(Point p) {
 
 
-        zoom_in_out(1, p, false);
-    }
     @Override
     public void click(Point p) {
         if (view.isPointOnMaterial(p)) {
@@ -244,30 +179,18 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
 
     @Override
     public void pressedMidBtn(Point location) {
-        middleButtonPressed = true;
-        prevX = location.x;
-        prevY = location.y;
-        offsetX = view.getMaterialPos().x - prevX;
-        offsetY = view.getMaterialPos().y - prevY;
+
     }
 
     @Override
     public void dragged(Point where) {
 
-        if (middleButtonPressed) {
-            int currX = where.x;
-            int currY = where.y;
-            int newPosX = offsetX + currX;
-            int newPosY = offsetY + currY;
 
-            view.setMaterialLoc(new Point(newPosX, newPosY));
-            view.refreshWindow();
-        }
     }
 
     @Override
     public void releasedMidBtn() {
-        middleButtonPressed = false;
+
     }
 
     @Override
@@ -290,9 +213,9 @@ public class MainController implements NewFileCallBack, MouseCallBacks, PointPre
     @Override
     public void clickedPoint(PointModel p) {
             System.out.println("point Selected!");
-            if(improvedToolBox.getActiveTool().toString()=="line"){
+            if(ToolTracker.getActiveTool().toString()=="line"){
                 lineBegin(p);
-            }else if(improvedToolBox.getActiveTool()==ToolNamesE.selectPoint){
+            }else if(ToolTracker.getActiveTool()==ToolNamesE.selectPoint){
                 movePointSelect(p);
             }
     }
@@ -389,10 +312,10 @@ else if(true){
     private void setALtoPoints(){
 
         for(LineModel ln: layerController.getLayerDrawingsModel().getLineModels()){
-            ln.pointBtnB.removeActionListener(pointAL);
-            ln.pointBtnA.removeActionListener(pointAL);
-            ln.pointBtnB.addActionListener(pointAL);
-            ln.pointBtnA.addActionListener(pointAL);
+            ln.UIPointBtnB.removeActionListener(pointAL);
+            ln.UIPointBtnA.removeActionListener(pointAL);
+            ln.UIPointBtnB.addActionListener(pointAL);
+            ln.UIPointBtnA.addActionListener(pointAL);
         }
 
 

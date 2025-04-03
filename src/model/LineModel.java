@@ -1,11 +1,9 @@
 package model;
 
-import ViewParts.PointBtn;
-import helpers.enums.ToolNamesE;
+import View.ViewUIComponents.UIPointBtn;
 import helpers.enums.ToolStatesE;
-import helpers.improvedToolBox;
+import helpers.ToolTracker;
 
-import java.awt.*;
 import java.awt.geom.Line2D;
 
 public class LineModel {
@@ -14,8 +12,8 @@ public class LineModel {
     PointModel pointB;
 
 
-  public  PointBtn pointBtnA;
-  public  PointBtn pointBtnB;
+  public UIPointBtn UIPointBtnA;
+  public UIPointBtn UIPointBtnB;
 
 
     static PointModel tempPa;
@@ -28,22 +26,22 @@ public class LineModel {
 
     public static void lineBeginImproved(PointModel point,LayerDrawingsModel model){
              modelTemp=model;
-             if(improvedToolBox.toolState==ToolStatesE.lineTracking){
+             if(ToolTracker.toolState==ToolStatesE.lineTracking){
 
 
-                 improvedToolBox.toolState=ToolStatesE.inactive;
+                 ToolTracker.toolState=ToolStatesE.inactive;
 
                  finishLine(point);
 
              }else{
                  System.out.println("ln begin model");
-                  improvedToolBox.toolState=ToolStatesE.lineTracking;
+                  ToolTracker.toolState=ToolStatesE.lineTracking;
                   tempPa=point;
              }
     }
     public static void lineMoving(PointModel point){
-        if(improvedToolBox.toolState!=ToolStatesE.lineTracking){
-            if(improvedToolBox.toolState==ToolStatesE.inactive){
+        if(ToolTracker.toolState!=ToolStatesE.lineTracking){
+            if(ToolTracker.toolState==ToolStatesE.inactive){
                 if(tempLine!=null){
                     if(modelTemp==null){return;}
                     modelTemp.removeLineModel(tempLine);
@@ -62,7 +60,7 @@ public class LineModel {
     public static void finishLine(PointModel pb){
         LineModel ln=new LineModel(tempPa,pb);
 
-           improvedToolBox.toolState=ToolStatesE.inactive;
+           ToolTracker.toolState=ToolStatesE.inactive;
         System.out.println("finish line");
 
         modelTemp.addLinesModel(ln);
@@ -71,21 +69,15 @@ public class LineModel {
 
     }
 
-
-
-
-
     public LineModel(PointModel pointA, PointModel pointB) {
         this.pointA = pointA;
         this.pointB = pointB;
-        pointBtnA =new PointBtn(pointA,25);
-        pointBtnA.setBackground(null);
-        pointBtnB =new PointBtn(pointB,25);
-        pointBtnB.setBackground(null);
+        UIPointBtnA =new UIPointBtn(pointA,25);
+        UIPointBtnA.setBackground(null);
+        UIPointBtnB =new UIPointBtn(pointB,25);
+        UIPointBtnB.setBackground(null);
 
     }
-
-
 
     public Line2D.Double getLineScaled(double scale) {
 
@@ -95,13 +87,9 @@ public class LineModel {
 
     }
 
-
-
-
-
     public void resetPointBtnsLocation(){
-        pointBtnA.resetLocation();
-        pointBtnB.resetLocation();
+        UIPointBtnA.resetLocation();
+        UIPointBtnB.resetLocation();
     }
 
 }

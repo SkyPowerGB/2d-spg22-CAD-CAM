@@ -3,7 +3,7 @@ package helpers;
 import helpers.enums.ToolNamesE;
 import helpers.enums.ToolStatesE;
 
-public  class improvedToolBox {
+public  class ToolTracker {
 public static ToolNamesE activeTool;
 public static ToolStatesE toolState;
     public static ToolNamesE getActiveTool() {
@@ -11,7 +11,7 @@ public static ToolStatesE toolState;
     }
 
     public static void setActiveTool(ToolNamesE activeTool) {
-        improvedToolBox.activeTool = activeTool;
+        ToolTracker.activeTool = activeTool;
     }
 
 

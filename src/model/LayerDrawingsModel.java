@@ -1,8 +1,5 @@
 package model;
 
-import ViewParts.PointBtn;
-
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public class LayerDrawingsModel {
@@ -31,9 +28,6 @@ public class LayerDrawingsModel {
     public void removeLineModel(LineModel lineModel){
         lineModels.remove(lineModel);
     }
-
-
-
 
 
     public void resetBtnsLocation(){

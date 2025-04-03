@@ -12,7 +12,7 @@ public class TextureHelper {
     public static ImageIcon getToolBtnTexture(ToolNamesE tool, int size) {
 
         String imgPath=resourcesFolder+"/ControlBtns/"+tool+".png";
-        if(improvedToolBox.getActiveTool()==tool){
+        if(ToolTracker.getActiveTool()==tool){
             imgPath=resourcesFolder+"/ControlBtns/"+tool+"_on.png";
         }
 

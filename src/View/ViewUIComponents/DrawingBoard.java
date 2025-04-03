@@ -1,4 +1,4 @@
-package ViewParts;
+package View.ViewUIComponents;
 
 import model.*;
 
@@ -25,8 +25,8 @@ public class DrawingBoard extends ScalablePanel {
 
         for(LineModel model1:model.getLineModels()){
             g2d.draw(model1.getLineScaled(super.scale));
-            model1.pointBtnA.setScale(super.scale);
-            model1.pointBtnB.setScale(super.scale);
+            model1.UIPointBtnA.setScale(super.scale);
+            model1.UIPointBtnB.setScale(super.scale);
         }
 
 
@@ -55,11 +55,12 @@ public class DrawingBoard extends ScalablePanel {
         this.model = model;
     }
 
+
     public void addPointBtns(){
         this.removeAll();
         for (LineModel model:model.getLineModels()) {
-            this.add(model.pointBtnA);
-            this.add(model.pointBtnB);
+            this.add(model.UIPointBtnA);
+            this.add(model.UIPointBtnB);
         }
 
     }

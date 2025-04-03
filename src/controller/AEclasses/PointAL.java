@@ -1,10 +1,8 @@
 package controller.AEclasses;
-import java.awt.Point;
 
-import ViewParts.PointBtn;
+import View.ViewUIComponents.UIPointBtn;
 import controller.callbacks.PointPressedCallBack;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,7 +13,7 @@ public class PointAL implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        PointBtn btn= (PointBtn) e.getSource();
+        UIPointBtn btn= (UIPointBtn) e.getSource();
             callBack.clickedPoint(btn.getModelPoint());
     }
 

@@ -2,12 +2,12 @@ package controller;
 
 
 import View.MainView;
-import ViewParts.DrawingBoard;
-import ViewParts.LayerPanel;
+import View.ViewUIComponents.DrawingBoard;
+import View.ViewUIComponents.LayerPanel;
 import helpers.DepthColorMap;
 import model.FileDataModel;
 import model.LayerDrawingsModel;
-import model.LayersModel;
+import model.LayersDataStorageModel;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -46,7 +46,7 @@ public class LayerController {
             return;
         }
         DepthColorMap map = new DepthColorMap(fileData.materialThickness, 0.1);
-        if (LayersModel.layerHeightExists(out)) {
+        if (LayersDataStorageModel.layerHeightExists(out)) {
             JOptionPane.showMessageDialog(null, "Layer at that height already exists");
             return;
         }
@@ -57,7 +57,7 @@ public class LayerController {
         layer.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
 
-        int index = LayersModel.addLayer(layer);
+        int index = LayersDataStorageModel.addLayer(layer);
         JButton btn = new JButton();
 
         btn.setSize(layer.getPreferredSize());
@@ -82,14 +82,15 @@ public class LayerController {
 
     public void selectLayer(String index) {
         int i = Integer.parseInt(index);
+        board=view.getBoard();
         board.removeAllUComponents();
-        LayersModel.activeLayer = i;
-        LayersModel.enableAllBtns();
-        LayersModel.getPanel(i).getLayerBtn().setEnabled(false);
+        LayersDataStorageModel.activeLayer = i;
+        LayersDataStorageModel.enableAllBtns();
+        LayersDataStorageModel.getPanel(i).getLayerBtn().setEnabled(false);
         System.out.println("select layer: " + i);
-        layerDrawingModel = LayersModel.getLayerModel();
+        layerDrawingModel = LayersDataStorageModel.getLayerModel();
         view.boardSetDrawingsModel(layerDrawingModel);
-
+        view.refreshWindow();
     }
 
     public void setMainView(MainView view){

@@ -1,12 +1,17 @@
 package model;
 
-import ViewParts.LayerPanel;
+import View.ViewUIComponents.LayerPanel;
 
 import java.util.ArrayList;
 
-public class LayersModel {
+public class
+LayersDataStorageModel {
+
+
+
     private static ArrayList<LayerPanel> layers=new ArrayList<>();
     private static ArrayList<LayerDrawingsModel> models=new ArrayList<>();
+    private static FileDataModel fileData;
 
     public static void enableAllBtns(){
         for (LayerPanel layer:layers) {
@@ -44,8 +49,11 @@ public class LayersModel {
     }
 
 
+    public static FileDataModel getFileData() {
+        return fileData;
+    }
 
-
-
-
+    public static void setFileData(FileDataModel fileData) {
+        LayersDataStorageModel.fileData = fileData;
+    }
 }

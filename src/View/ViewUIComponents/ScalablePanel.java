@@ -1,4 +1,4 @@
-package ViewParts;
+package View.ViewUIComponents;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +31,11 @@ public class ScalablePanel extends JPanel {
         super.setSize(new Dimension((int) (originalWidth*scale), (int) (originalHeight*scale)));
 
     }
+
+    public double getScale(){
+            return scale;
+    }
+
 
 
 

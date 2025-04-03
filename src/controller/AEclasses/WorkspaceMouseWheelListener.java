@@ -1,6 +1,7 @@
 package controller.AEclasses;
 
 import controller.callbacks.MouseCallBacks;
+import controller.callbacks.ZoomCallBack;
 
 import java.awt.*;
 import java.awt.event.MouseWheelEvent;
@@ -8,10 +9,11 @@ import java.awt.event.MouseWheelListener;
 
 public class WorkspaceMouseWheelListener implements MouseWheelListener {
 
-    MouseCallBacks mouseCallBacks;
-    public WorkspaceMouseWheelListener(MouseCallBacks mouseCallBacks){
-        this.mouseCallBacks = mouseCallBacks;
 
+
+    ZoomCallBack zoomCallBack;
+    public  WorkspaceMouseWheelListener(ZoomCallBack zoomCallBack){
+        this.zoomCallBack=zoomCallBack;
     }
 
     @Override
@@ -21,10 +23,22 @@ public class WorkspaceMouseWheelListener implements MouseWheelListener {
         Point loc = new Point(x, y);
         if (e.getWheelRotation() > 0) {
 
-            mouseCallBacks.zoomOut(loc);
+
+
+            if(zoomCallBack!=null){
+
+              zoomCallBack.zoomOut(loc);
+            }
+
+
         } else {
-               mouseCallBacks.zoomIn(loc);
+
+            if(zoomCallBack!=null){
+                 zoomCallBack.zoomIn(loc);
+
+            }
         }
+
 
 
 

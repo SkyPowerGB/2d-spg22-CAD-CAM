@@ -1,6 +1,6 @@
 package View;
 
-import ViewParts.*;
+import View.ViewUIComponents.*;
 import helpers.TextureHelper;
 import helpers.enums.FileOptionsE;
 import helpers.enums.ToolNamesE;
@@ -9,6 +9,7 @@ import helpers.enums.menuItemsE;
 import helpers.helperModels.RectangleSpanHelper;
 import model.FileDataModel;
 import model.LayerDrawingsModel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,7 +54,7 @@ public class MainView {
     double scale = 1;
 
 
-    JButton deleteLayerBtn;
+
 
     ScalableLayeredPane materialLayers;
 
@@ -65,9 +66,7 @@ public class MainView {
         initView();
     }
 
-    public ArrayList<JButton> getToolBtns() {
-        return toolBtns;
-    }
+
 
     private void initView() {
         int layerPanelWidth = 90;
@@ -87,7 +86,7 @@ public class MainView {
 
         addLayerBtn = new JButton("+");
         addLayerBtn.setPreferredSize(new Dimension(100, 50));
-        deleteLayer = new JButton("-");
+
 
         layersPanel = new JPanel();
         layersPanel.setLayout(new GridLayout(64, 1)); // Use BoxLayout to allow vertical expansion
@@ -254,6 +253,18 @@ public class MainView {
         mainFrame.add(programPanel);
         mainFrame.setVisible(true);
     }
+
+
+
+
+
+
+
+
+
+    public ArrayList<JButton> getToolBtns() {
+        return toolBtns;
+    }
     public void addMaterial(FileDataModel data) {
         Dimension materialDim = new Dimension(((int) data.materialDim.getWidth() * 10),
                 ((int) data.materialDim.getHeight() * 10));
@@ -342,10 +353,7 @@ public class MainView {
     public ArrayList<JMenuItem> getMenuOptions() {
         return menuOptions;
     }
-    public void boardSetDrawingsModel(LayerDrawingsModel model){
-        board.setModel(model);
-        this.refreshWindow();
-    }
+
 
     public void refreshWindow() {
         board.getModel().resetBtnsLocation();
@@ -353,28 +361,46 @@ public class MainView {
     }
 
 
-    public Point recalcWorkspaceToMaterial(Point p) {
+    public Point recalcWorkspaceToMaterial(@NotNull Point p) {
         Point matLoc = material.getLocation();
         return new Point((p.x - (matLoc.x)), (p.y - (matLoc.y)));
 
     }
 
+    // get Board that draws graphics
     public DrawingBoard getBoard() {
         return board;
     }
 
+    // set new model for board to draw
+    public void boardSetDrawingsModel(LayerDrawingsModel model){
+        board.setModel(model);
+        this.refreshWindow();
+    }
+
+    // get currentBoardModel
+    public LayerDrawingsModel getBoardsCurrDrawingModel(){
+
+        return  getBoard().getModel();
+    }
+
+    // for action listner ->new layer
     public JButton getAddLayerBtn() {
         return addLayerBtn;
     }
 
+    // add Layer Panel With Btn
     public void addLayer(LayerPanel panel) {
 
         layersPanel.add(panel);
         mainFrame.refresh();
     }
+
+    // layers are in binary tree -> remove then re-add stuff
     public void removeLayers(){
         layersPanel.removeAll();
   }
+
     public JButton getWorkspaceShowPointsBtn(){
         return  showConnectPoints;
     }

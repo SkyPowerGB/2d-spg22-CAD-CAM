@@ -2,10 +2,10 @@ package controller.callbacks;
 
 import java.awt.*;
 
-public interface MouseCallBacks {
+public interface ToolCallBack {
+    void zoomIn(Point p);
 
-
-
+    void zoomOut(Point p);
 
     void click(Point p);
 

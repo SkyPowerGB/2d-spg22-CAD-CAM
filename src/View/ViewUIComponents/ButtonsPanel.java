@@ -1,4 +1,4 @@
-package ViewParts;
+package View.ViewUIComponents;
 
 import javax.swing.*;
 import java.util.ArrayList;
