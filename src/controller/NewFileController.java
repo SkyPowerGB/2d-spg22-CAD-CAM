@@ -11,7 +11,7 @@ public class NewFileController {
     public NewFileController(NewFileCallBack callBack) {
         view2= new NewFile();
         this.callBack = callBack;
-view2.getCreateBtn().addActionListener(e-> {onCreateNewFileClick();});
+    view2.getCreateBtn().addActionListener(e-> {onCreateNewFileClick();});
     }
    public void onCreateNewFileClick(){
         FileDataModel fileDataModel =new FileDataModel();

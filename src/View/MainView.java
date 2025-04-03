@@ -356,7 +356,7 @@ public class MainView {
 
 
     public void refreshWindow() {
-        board.getModel().resetBtnsLocation();
+
         mainFrame.refresh();
     }
 
@@ -374,14 +374,14 @@ public class MainView {
 
     // set new model for board to draw
     public void boardSetDrawingsModel(LayerDrawingsModel model){
-        board.setModel(model);
+        board.setDrawingsModel(model);
         this.refreshWindow();
     }
 
     // get currentBoardModel
     public LayerDrawingsModel getBoardsCurrDrawingModel(){
 
-        return  getBoard().getModel();
+        return  getBoard().getDrawingsModel();
     }
 
     // for action listner ->new layer

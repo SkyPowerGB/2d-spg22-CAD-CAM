@@ -7,10 +7,10 @@ import java.awt.*;
 public class DrawingBoard extends ScalablePanel {
 
 
-    LayerDrawingsModel model;
+    LayerDrawingsModel drawingsModel;
 
-    public DrawingBoard(LayerDrawingsModel model) {
-        this.model = model;
+    public DrawingBoard(LayerDrawingsModel drawingsModel) {
+        this.drawingsModel = drawingsModel;
         this.setLayout(null);
     }
 
@@ -23,10 +23,9 @@ public class DrawingBoard extends ScalablePanel {
         BasicStroke stroke = new BasicStroke((float) (1*(super.scale)));
         g2d.setStroke(stroke);
 
-        for(LineModel model1:model.getLineModels()){
+        for(LineModel model1: drawingsModel.getLineModels()){
             g2d.draw(model1.getLineScaled(super.scale));
-            model1.UIPointBtnA.setScale(super.scale);
-            model1.UIPointBtnB.setScale(super.scale);
+
         }
 
 
@@ -47,23 +46,15 @@ public class DrawingBoard extends ScalablePanel {
 
     }
 
-    public LayerDrawingsModel getModel() {
-        return model;
+    public LayerDrawingsModel getDrawingsModel() {
+        return drawingsModel;
     }
 
-    public void setModel(LayerDrawingsModel model) {
-        this.model = model;
+    public void setDrawingsModel(LayerDrawingsModel drawingsModel) {
+        this.drawingsModel = drawingsModel;
     }
 
 
-    public void addPointBtns(){
-        this.removeAll();
-        for (LineModel model:model.getLineModels()) {
-            this.add(model.UIPointBtnA);
-            this.add(model.UIPointBtnB);
-        }
-
-    }
     public void removeAllUComponents(){
         this.removeAll();
     }

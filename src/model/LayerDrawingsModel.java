@@ -30,12 +30,6 @@ public class LayerDrawingsModel {
     }
 
 
-    public void resetBtnsLocation(){
-        for (LineModel ln:lineModels) {
-            ln.resetPointBtnsLocation();
-        }
-
-    }
 
 
 }

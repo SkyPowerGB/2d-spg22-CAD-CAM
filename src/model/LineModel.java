@@ -1,8 +1,7 @@
 package model;
 
-import View.ViewUIComponents.UIPointBtn;
 import helpers.enums.ToolStatesE;
-import helpers.ToolTracker;
+import helpers.ToolStateTracker;
 
 import java.awt.geom.Line2D;
 
@@ -12,36 +11,30 @@ public class LineModel {
     PointModel pointB;
 
 
-  public UIPointBtn UIPointBtnA;
-  public UIPointBtn UIPointBtnB;
-
 
     static PointModel tempPa;
     static LineModel tempLine;
     static LayerDrawingsModel modelTemp;
 
 
-
-
-
     public static void lineBeginImproved(PointModel point,LayerDrawingsModel model){
              modelTemp=model;
-             if(ToolTracker.toolState==ToolStatesE.lineTracking){
+             if(ToolStateTracker.toolState==ToolStatesE.lineTracking){
 
 
-                 ToolTracker.toolState=ToolStatesE.inactive;
+                 ToolStateTracker.toolState=ToolStatesE.inactive;
 
                  finishLine(point);
 
              }else{
                  System.out.println("ln begin model");
-                  ToolTracker.toolState=ToolStatesE.lineTracking;
+                  ToolStateTracker.toolState=ToolStatesE.lineTracking;
                   tempPa=point;
              }
     }
     public static void lineMoving(PointModel point){
-        if(ToolTracker.toolState!=ToolStatesE.lineTracking){
-            if(ToolTracker.toolState==ToolStatesE.inactive){
+        if(ToolStateTracker.toolState!=ToolStatesE.lineTracking){
+            if(ToolStateTracker.toolState==ToolStatesE.inactive){
                 if(tempLine!=null){
                     if(modelTemp==null){return;}
                     modelTemp.removeLineModel(tempLine);
@@ -60,7 +53,7 @@ public class LineModel {
     public static void finishLine(PointModel pb){
         LineModel ln=new LineModel(tempPa,pb);
 
-           ToolTracker.toolState=ToolStatesE.inactive;
+        ToolStateTracker.toolState=ToolStatesE.inactive;
         System.out.println("finish line");
 
         modelTemp.addLinesModel(ln);
@@ -72,10 +65,7 @@ public class LineModel {
     public LineModel(PointModel pointA, PointModel pointB) {
         this.pointA = pointA;
         this.pointB = pointB;
-        UIPointBtnA =new UIPointBtn(pointA,25);
-        UIPointBtnA.setBackground(null);
-        UIPointBtnB =new UIPointBtn(pointB,25);
-        UIPointBtnB.setBackground(null);
+
 
     }
 
@@ -87,9 +77,5 @@ public class LineModel {
 
     }
 
-    public void resetPointBtnsLocation(){
-        UIPointBtnA.resetLocation();
-        UIPointBtnB.resetLocation();
-    }
 
 }
