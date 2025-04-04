@@ -4,6 +4,7 @@ package controller;
 import View.MainView;
 import View.ViewUIComponents.DrawingBoard;
 import View.ViewUIComponents.LayerPanel;
+import controller.defaults.Controller;
 import helpers.DepthColorMap;
 import model.FileDataModel;
 import model.LayerDrawingsModel;
@@ -12,19 +13,16 @@ import model.LayersDataStorageModel;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.TreeMap;
 
-public class LayerController {
+public class LayerController extends Controller  {
     private MainView view;
    private   FileDataModel fileData;
    private LayerDrawingsModel layerDrawingModel;
    private DrawingBoard board;
    private TreeMap<Double, LayerPanel> layers = new TreeMap<Double, LayerPanel>();
    public LayerController(){}
-   public LayerController(MainView view,FileDataModel fileData){
-        this.view=view;
-        this.fileData = fileData;
-    }
 
     public void addLayer() {
 
@@ -98,19 +96,17 @@ public class LayerController {
 
     }
 
-    public  LayerDrawingsModel getLayerDrawingsModel(){
-       return layerDrawingModel;
-    }
+
 
     public void setFileData(FileDataModel model){
        this.fileData=model;
     }
 
-    public void setBoard(DrawingBoard board){
-       this.board=board;
+
+    @Override
+    public void handleAction(ActionEvent e) {
+
     }
 
-    public  void setLayerDrawingModel(LayerDrawingsModel model){
-       this.layerDrawingModel=model;
-    }
+
 }

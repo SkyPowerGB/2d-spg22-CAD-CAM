@@ -18,40 +18,41 @@ import java.util.ArrayList;
 
 public class MainView {
 
-    JButton hideConnectPoints, showConnectPoints, workspaceHomeLoc,workspaceScaleDefault;
-    JPanel bottomPanel;
-    ShownWindow mainFrame;
-    JLayeredPane layeredPane;
-    JPanel programPanel;
-    JPanel workspacePanel;
-    JPanel leftPanel;
-    JPanel toolPanel;
+   private JButton hideConnectPoints, showConnectPoints, workspaceHomeLoc,workspaceScaleDefault;
 
-    JPanel workspaceNavigationPanel;
+    private JPanel bottomPanel;
+    private ShownWindow mainFrame;
 
-    JButton addLayerBtn;
-    JButton deleteLayer;
+    private JPanel programPanel;
+    private JPanel workspacePanel;
+    private JPanel leftPanel;
+    private  JPanel toolPanel;
 
-    JScrollPane leftScrollPane;
+    private  JPanel workspaceToolPanel;
 
-    JPanel layersGroupPanel;
-    JPanel layersControlPanel;
-    JPanel layersPanel;
-    JPanel vectorLayer;
-    LabeledInput zStep;
-    ArrayList<JButton> toolBtns;
-    JPanel rightSidePanel;
-    JPanel workspaceToolsTopPanel;
-    JMenuBar menuBar;
-    ArrayList<JMenu> menuItems;
-    ArrayList<JMenuItem> menuOptions;
-    LayerDrawingsModel drawingsModel;
-    DrawingBoard board;
-    ScalablePanel material;
-    Dimension materialOriginalDim;
+    private  JButton addLayerBtn;
 
-    JLabel scaleLbl;
-    double scale = 1;
+
+
+
+    private  JPanel layerSidebarPanel;
+
+    private  JPanel layersPanel;
+
+    private LabeledInput zStep;
+    private  ArrayList<JButton> toolBtns;
+    private   JPanel rightSidePanel;
+    private JPanel workspaceToolsTopPanel;
+    private JMenuBar menuBar;
+    private ArrayList<JMenu> menuItems;
+    private  ArrayList<JMenuItem> menuOptions;
+    private LayerDrawingsModel drawingsModel;
+    private  DrawingBoard board;
+    private  ScalablePanel material;
+    private  Dimension materialOriginalDim;
+
+    private  JLabel scaleLbl;
+    private   double scale = 1;
 
 
 
@@ -75,36 +76,34 @@ public class MainView {
         scalablePanels = new ArrayList<>();
         mainFrame = new ShownWindow();
 
+        //----------------------------------------
+          // layers control panel---------------------------
+        // main layerSidebar
+        layerSidebarPanel = new JPanel(new BorderLayout());
+        layerSidebarPanel.setPreferredSize(new Dimension(layerPanelWidth, mainFrame.getHeight()));
 
-        layeredPane = new JLayeredPane();
-
-        layersGroupPanel = new JPanel(new BorderLayout());
-        layersGroupPanel.setPreferredSize(new Dimension(layerPanelWidth, mainFrame.getHeight()));
-
-        layersControlPanel = new JPanel();
-        layersControlPanel.setPreferredSize(new Dimension(90, 70));
-
+        //add layerBtn
         addLayerBtn = new JButton("+");
         addLayerBtn.setPreferredSize(new Dimension(100, 50));
 
-
+        //layersPanel setup
         layersPanel = new JPanel();
-        layersPanel.setLayout(new GridLayout(64, 1)); // Use BoxLayout to allow vertical expansion
+        layersPanel.setLayout(new GridLayout(64, 1));
 
+        //add vertical scroll to the layersPanel
+        JScrollPane layerListVerticalScrollPane = new JScrollPane(layersPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        JScrollPane scrollPane = new JScrollPane(layersPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-
-        layersGroupPanel.add(addLayerBtn, BorderLayout.NORTH);
-        layersGroupPanel.add(scrollPane, BorderLayout.CENTER);
-
+        // layer sidebar add layersPanels
+        layerSidebarPanel.add(addLayerBtn, BorderLayout.NORTH);
+        layerSidebarPanel.add(layerListVerticalScrollPane, BorderLayout.CENTER);
+        //----------------------------------------
 
         drawingsModel = new LayerDrawingsModel();
         board = new DrawingBoard(drawingsModel);
 
 
         workspacePanel = new JPanel();
+        workspacePanel.setToolTipText("workspace");
         workspacePanel.setBackground(new Color(107, 107, 107));
         workspacePanel.setLayout(null);
 
@@ -118,10 +117,7 @@ public class MainView {
         toolBtns = new ArrayList<>();
         toolPanel = new JPanel();
 
-        leftScrollPane = new JScrollPane();
 
-        vectorLayer = new JPanel();
-        vectorLayer.setLayout(null);
 
         zStep = new LabeledInput();
 
@@ -185,7 +181,7 @@ public class MainView {
         leftPanel.setLayout(new BorderLayout());
 
         leftPanel.add(toolPanel, BorderLayout.WEST);
-        leftPanel.add(layersGroupPanel, BorderLayout.EAST);
+        leftPanel.add(layerSidebarPanel, BorderLayout.EAST);
 
 
 
@@ -198,9 +194,9 @@ public class MainView {
         workspaceToolsTopPanel.setLayout(new GridLayout(1,20));
         workspaceToolsTopPanel.setToolTipText("workspaceTools");
 
-        workspaceNavigationPanel =new JPanel();
-        workspaceNavigationPanel.setLayout(new GridLayout(1,3));
-        workspaceNavigationPanel.setBackground(Color.cyan);
+        workspaceToolPanel =new JPanel();
+        workspaceToolPanel.setLayout(new GridLayout(1,3));
+        workspaceToolPanel.setBackground(Color.cyan);
 ;
 
         int wrkSpcToolsBtnSize =60;
@@ -221,16 +217,16 @@ public class MainView {
         workspaceScaleDefault.addActionListener(e->{setScale(1);});
         workspaceHomeLoc.addActionListener(e->{material.setLocation(0,0);});
 
-        workspaceNavigationPanel.add(hideConnectPoints);
-        workspaceNavigationPanel.add(showConnectPoints);
-        workspaceNavigationPanel.add(workspaceHomeLoc);
-        workspaceNavigationPanel.add(workspaceScaleDefault);
+        workspaceToolPanel.add(hideConnectPoints);
+        workspaceToolPanel.add(showConnectPoints);
+        workspaceToolPanel.add(workspaceHomeLoc);
+        workspaceToolPanel.add(workspaceScaleDefault);
 
 
 
 
        workspaceToolsTopPanel.add(new JPanel());
-        workspaceToolsTopPanel.add(workspaceNavigationPanel);
+        workspaceToolsTopPanel.add(workspaceToolPanel);
         workspaceToolsTopPanel.add(new JPanel());
 
 
@@ -247,7 +243,7 @@ public class MainView {
         programPanel.add(bottomPanel, BorderLayout.SOUTH);
 
 
-        layeredPane.add(programPanel, JLayeredPane.DEFAULT_LAYER);
+
 
 
         mainFrame.add(programPanel);

@@ -8,10 +8,7 @@ public class LayerPanel extends JPanel {
     public LayerPanel(double layerDepth){
         this.LayerZheight =layerDepth;
     }
-    public LayerPanel(double layerDepth,JButton btn){
-        this.LayerZheight =layerDepth;
-        layerBtn=btn;
-    }
+
     public double getLayerZheight() {
         return LayerZheight;
     }
