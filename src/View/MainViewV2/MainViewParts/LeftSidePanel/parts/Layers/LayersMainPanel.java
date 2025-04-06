@@ -19,12 +19,14 @@ public class LayersMainPanel extends JPanel {
     public LayersMainPanel(){
         this.setLayout(new BorderLayout());
    this.setBackground(Color.GREEN);
-          addLayerBtn = new JButton("+");
+        this.setPreferredSize(new Dimension(100, getMaximumSize().height));
+        addLayerBtn = new JButton("+");
         addLayerBtn.setPreferredSize(new Dimension(100, 50));
 
          layersListScrollPanel =new LayersListScrollPanel();
-        this.add(layersListScrollPanel, BorderLayout.CENTER);
+
         this.add(addLayerBtn, BorderLayout.NORTH);
+        this.add(layersListScrollPanel, BorderLayout.CENTER);
 
 
     }

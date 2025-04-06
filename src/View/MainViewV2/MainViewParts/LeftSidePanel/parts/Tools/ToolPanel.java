@@ -17,7 +17,8 @@ public class ToolPanel extends JPanel {
     // new tool btns type
     private  ArrayList<ToolBtn> toolBtnList=new ArrayList<>();
     public  ToolPanel(){
-        this.setLayout(new GridLayout(10, 2, 2, 2));
+        this.setLayout(new GridLayout(10, 1, 2, 2));
+        this.setSize(100,getMaximumSize().height);
         this.setBackground(null);
         setupToolBtns();
     }

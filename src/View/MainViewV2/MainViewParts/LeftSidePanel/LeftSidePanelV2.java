@@ -12,7 +12,7 @@ public class LeftSidePanelV2 extends JPanel {
     private ToolPanel toolPanel;
     private    LayersMainPanel layersMainPanel;
     public LeftSidePanelV2(){
-        this.setBackground(Color.cyan);
+        this.setBackground(Color.darkGray);
         this.setPreferredSize(new Dimension(200, getMaximumSize().height));
         this.setLayout(new BorderLayout());
          toolPanel=new ToolPanel();

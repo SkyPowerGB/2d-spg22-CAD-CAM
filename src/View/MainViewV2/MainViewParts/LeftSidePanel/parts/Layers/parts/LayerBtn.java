@@ -6,6 +6,7 @@ import controller.standard.Controller;
 import model.V2models.LayerModelV2;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class LayerBtn extends JButton {
 private LayerModelV2 model;
@@ -20,7 +21,8 @@ public LayerBtn(Controller controller,LayerModelV2 model){
 
 private void setupAppearance(){
 
-    this.setSize(VisualSettingsLeftSidePanel.LayerBtnSize,VisualSettingsLeftSidePanel.LayerBtnSize);
+
+    this.setPreferredSize(new Dimension(getMaximumSize().width,VisualSettingsLeftSidePanel.LayerBtnSize));
     this.setText(String.valueOf(model.getDepth()));
 
 }

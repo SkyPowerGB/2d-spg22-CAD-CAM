@@ -1,5 +1,7 @@
 package View.MainViewV2.MainViewParts.LeftSidePanel.parts.Layers.parts;
 
+import View.MainViewV2.MainViewParts.LeftSidePanel.VisualSettingsLeftSidePanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,9 +14,9 @@ public class LayerBtnGrpPanelV2 extends JPanel {
     public LayerBtnGrpPanelV2() {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setSize(200,5000);
 
-        this.setBackground(Color.BLUE);
+        this.setToolTipText("Layers");
+
     }
 
     private ArrayList<LayerBtn> layerButtons = new ArrayList<>();
