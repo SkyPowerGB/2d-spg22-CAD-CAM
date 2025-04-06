@@ -1,4 +1,4 @@
-package helpers.enums;
+package Enums;
 
 public enum menuItemsE {
     File,Settings

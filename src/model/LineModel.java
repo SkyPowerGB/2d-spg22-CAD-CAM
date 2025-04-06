@@ -1,6 +1,6 @@
 package model;
 
-import helpers.enums.ToolStatesE;
+import Enums.ToolStatesE;
 import helpers.ToolStateTracker;
 
 import java.awt.geom.Line2D;

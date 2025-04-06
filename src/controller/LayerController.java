@@ -1,14 +1,16 @@
 package controller;
 
 
+import Enums.ControllerActionEventNamesE;
 import View.MainView;
 import View.ViewUIComponents.DrawingBoard;
 import View.ViewUIComponents.LayerPanel;
-import controller.defaults.Controller;
+import controller.standard.Controller;
 import helpers.DepthColorMap;
 import model.FileDataModel;
 import model.LayerDrawingsModel;
 import model.LayersDataStorageModel;
+import model.V2models.LayerModelV2;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -22,79 +24,11 @@ public class LayerController extends Controller  {
    private LayerDrawingsModel layerDrawingModel;
    private DrawingBoard board;
    private TreeMap<Double, LayerPanel> layers = new TreeMap<Double, LayerPanel>();
-   public LayerController(){}
 
-    public void addLayer() {
-
-        if (fileData == null) {
-            JOptionPane.showMessageDialog(null, "Please create file");
-            return;
-        }
-        String input = JOptionPane.showInputDialog(null, "Enter layer height in mm");
-        double out;
-        try {
-            out = Double.parseDouble(input);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid input");
-            return;
-        }
-        if (out == 0) {
-            JOptionPane.showMessageDialog(null, "Putting 0 depth?");
-            return;
-        }
-        DepthColorMap map = new DepthColorMap(fileData.materialThickness, 0.1);
-        if (LayersDataStorageModel.layerHeightExists(out)) {
-            JOptionPane.showMessageDialog(null, "Layer at that height already exists");
-            return;
-        }
-        LayerPanel layer = new LayerPanel(out);
-        layer.setPreferredSize(new Dimension(90, 50));
-        layer.setBackground(Color.gray);
-        layer.setLayout(null);
-        layer.setBorder(new BevelBorder(BevelBorder.LOWERED));
-
-
-        int index = LayersDataStorageModel.addLayer(layer);
-        JButton btn = new JButton();
-
-        btn.setSize(layer.getPreferredSize());
-        btn.setName(String.valueOf(index));
-        btn.setBackground(null);
-        btn.setBackground(map.getHeightColor(out));
-        btn.setText(String.valueOf(out));
-        layer.setLayerBtn(btn);
-        btn.addActionListener(e -> {
-            selectLayer((((JButton) e.getSource()).getName()));
-        });
-
-
-
-        layers.put(out, layer);
-
-        view.removeLayers();
-        layer.add(btn);
-        layers.forEach((k,l)-> view.addLayer(l));
-
-    }
-
-    public void selectLayer(String index) {
-        int i = Integer.parseInt(index);
-        board=view.getBoard();
-        board.removeAllUComponents();
-        LayersDataStorageModel.activeLayer = i;
-        LayersDataStorageModel.enableAllBtns();
-        LayersDataStorageModel.getPanel(i).getLayerBtn().setEnabled(false);
-        System.out.println("select layer: " + i);
-        layerDrawingModel = LayersDataStorageModel.getLayerModel();
-        view.boardSetDrawingsModel(layerDrawingModel);
-        view.refreshWindow();
-    }
-
-    public void setMainView(MainView view){
+   public LayerController(MainView view){
        this.view=view;
-
-    }
+       view.getLeftSidePanelV2().setLayersController(this);
+   }
 
 
 
@@ -107,6 +41,32 @@ public class LayerController extends Controller  {
     public void handleAction(ActionEvent e) {
 
     }
+
+    @Override
+    public void handleAction(ActionEvent e, ControllerActionEventNamesE action) {
+         System.out.println(action);
+         if(action==ControllerActionEventNamesE.addLayerBtnClick){
+             addNewLayerV2();
+         }
+    }
+
+    public void addNewLayerV2(){
+        String input = JOptionPane.showInputDialog(null, "Enter layer depth in mm");
+
+        try {
+            Double out = Double.parseDouble(input);
+            LayerModelV2 modelV2=new LayerModelV2();
+            modelV2.setDepth(out);
+            view.getLeftSidePanelV2().getLayersMainPanel().addNewLayer(modelV2);
+
+
+        }catch (Exception e){
+
+
+        }
+    }
+
+
 
 
 }

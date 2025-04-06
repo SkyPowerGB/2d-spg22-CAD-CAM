@@ -1,11 +1,12 @@
 package View;
 
+import View.MainViewV2.MainViewParts.LeftSidePanel.LeftSidePanelV2;
 import View.ViewUIComponents.*;
 import helpers.TextureHelper;
-import helpers.enums.FileOptionsE;
-import helpers.enums.ToolNamesE;
-import helpers.enums.WorkspaceToolBtnsE;
-import helpers.enums.menuItemsE;
+import Enums.FileOptionsE;
+import Enums.ToolNamesE;
+import Enums.WorkspaceToolBtnsE;
+import Enums.menuItemsE;
 import helpers.helperModels.RectangleSpanHelper;
 import model.FileDataModel;
 import model.LayerDrawingsModel;
@@ -25,21 +26,19 @@ public class MainView {
 
     private JPanel programPanel;
     private JPanel workspacePanel;
+
     private JPanel leftPanel;
+
     private  JPanel toolPanel;
 
-    private  JPanel workspaceToolPanel;
+    private  JPanel topPanelWorkspaceTools;
 
     private  JButton addLayerBtn;
 
 
 
 
-    private  JPanel layerSidebarPanel;
 
-    private  JPanel layersPanel;
-
-    private LabeledInput zStep;
     private  ArrayList<JButton> toolBtns;
     private   JPanel rightSidePanel;
     private JPanel workspaceToolsTopPanel;
@@ -49,7 +48,7 @@ public class MainView {
     private LayerDrawingsModel drawingsModel;
     private  DrawingBoard board;
     private  ScalablePanel material;
-    private  Dimension materialOriginalDim;
+
 
     private  JLabel scaleLbl;
     private   double scale = 1;
@@ -69,60 +68,47 @@ public class MainView {
 
 
 
-    private void initView() {
-        int layerPanelWidth = 90;
 
-        materialLayers = new ScalableLayeredPane();
+    private void initView() {
+
+
+
+
+
         scalablePanels = new ArrayList<>();
+
+
+
+        menuItems = new ArrayList<>();
+
+        menuOptions = new ArrayList<>();
+
+
+
         mainFrame = new ShownWindow();
 
         //----------------------------------------
-          // layers control panel---------------------------
-        // main layerSidebar
-        layerSidebarPanel = new JPanel(new BorderLayout());
-        layerSidebarPanel.setPreferredSize(new Dimension(layerPanelWidth, mainFrame.getHeight()));
 
-        //add layerBtn
-        addLayerBtn = new JButton("+");
-        addLayerBtn.setPreferredSize(new Dimension(100, 50));
-
-        //layersPanel setup
-        layersPanel = new JPanel();
-        layersPanel.setLayout(new GridLayout(64, 1));
-
-        //add vertical scroll to the layersPanel
-        JScrollPane layerListVerticalScrollPane = new JScrollPane(layersPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        // layer sidebar add layersPanels
-        layerSidebarPanel.add(addLayerBtn, BorderLayout.NORTH);
-        layerSidebarPanel.add(layerListVerticalScrollPane, BorderLayout.CENTER);
-        //----------------------------------------
 
         drawingsModel = new LayerDrawingsModel();
         board = new DrawingBoard(drawingsModel);
 
 
-        workspacePanel = new JPanel();
-        workspacePanel.setToolTipText("workspace");
-        workspacePanel.setBackground(new Color(107, 107, 107));
-        workspacePanel.setLayout(null);
+        workspacePanelInit();
 
         leftPanel = new JPanel();
+
+
+
+
+
         rightSidePanel = new JPanel();
         workspaceToolsTopPanel = new JPanel();
         programPanel = new JPanel();
         menuBar = new JMenuBar();
-        menuItems = new ArrayList<>();
-        menuOptions = new ArrayList<>();
-        toolBtns = new ArrayList<>();
-        toolPanel = new JPanel();
 
 
 
-        zStep = new LabeledInput();
-
-        zStep.input.setText("0.1");
-        zStep.label.setText("Z-resolution mm");
 
 
         bottomPanel = new JPanel();
@@ -135,53 +121,30 @@ public class MainView {
         material.setBackground(Color.white);
         material.setLayout(null);
 
+        materialLayers = new ScalableLayeredPane();
+
         board.setBackground(Color.ORANGE);
         materialLayers.add(board);
         board.setSize(500, 500);
         materialLayers.setSize(500, 500);
         material.add(materialLayers);
 
-        toolPanel.setLayout(new GridLayout(10, 2, 2, 2));
-        toolPanel.setBackground(null);
 
-        for (ToolNamesE tool : ToolNamesE.values()) {
 
-            JButton toolBtn = new JButton();
-            toolBtn.setSize(new Dimension(50, 50));
-            toolBtn.setIcon(TextureHelper.getToolBtnTexture(tool, 50));
-            toolBtn.setName(tool.toString());
-            toolPanel.add(toolBtn);
-            toolBtns.add(toolBtn);
-        }
-        for (menuItemsE item : menuItemsE.values()) {
-            JMenu menu = new JMenu(item.toString());
-            menuItems.add(menu);
-            menuBar.add(menu);
-        }
-        for (FileOptionsE item : FileOptionsE.values()) {
-            JMenuItem menuItem = new JMenuItem(item.toString());
-            menuItem.setName(item.toString());
-            menuOptions.add(menuItem);
-            menuItems.get(0).add(menuItem);
-        }
+
+        // menuBarSetup
+        menuBarSetup();
 
 
         Dimension frameSize = mainFrame.getSize();
-        mainFrame.setTitle("2.5D SP-24 CAD/CAM");
+        // old code
+            mainFrame.setTitle("2.5D SP-24 CAD/CAM");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setJMenuBar(menuBar);
-
         menuBar.setPreferredSize(new Dimension(mainFrame.getWidth(), 50));
-
         programPanel.setLayout(new BorderLayout());
 
 
-        leftPanel.setBackground(Color.cyan);
-        leftPanel.setPreferredSize(new Dimension(200, frameSize.height));
-        leftPanel.setLayout(new BorderLayout());
-
-        leftPanel.add(toolPanel, BorderLayout.WEST);
-        leftPanel.add(layerSidebarPanel, BorderLayout.EAST);
 
 
 
@@ -194,9 +157,9 @@ public class MainView {
         workspaceToolsTopPanel.setLayout(new GridLayout(1,20));
         workspaceToolsTopPanel.setToolTipText("workspaceTools");
 
-        workspaceToolPanel =new JPanel();
-        workspaceToolPanel.setLayout(new GridLayout(1,3));
-        workspaceToolPanel.setBackground(Color.cyan);
+        topPanelWorkspaceTools =new JPanel();
+        topPanelWorkspaceTools.setLayout(new GridLayout(1,3));
+        topPanelWorkspaceTools.setBackground(Color.cyan);
 ;
 
         int wrkSpcToolsBtnSize =60;
@@ -217,16 +180,16 @@ public class MainView {
         workspaceScaleDefault.addActionListener(e->{setScale(1);});
         workspaceHomeLoc.addActionListener(e->{material.setLocation(0,0);});
 
-        workspaceToolPanel.add(hideConnectPoints);
-        workspaceToolPanel.add(showConnectPoints);
-        workspaceToolPanel.add(workspaceHomeLoc);
-        workspaceToolPanel.add(workspaceScaleDefault);
+        topPanelWorkspaceTools.add(hideConnectPoints);
+        topPanelWorkspaceTools.add(showConnectPoints);
+        topPanelWorkspaceTools.add(workspaceHomeLoc);
+        topPanelWorkspaceTools.add(workspaceScaleDefault);
 
 
 
 
        workspaceToolsTopPanel.add(new JPanel());
-        workspaceToolsTopPanel.add(workspaceToolPanel);
+        workspaceToolsTopPanel.add(topPanelWorkspaceTools);
         workspaceToolsTopPanel.add(new JPanel());
 
 
@@ -236,7 +199,9 @@ public class MainView {
 
         bottomPanel.add(scaleLbl,BorderLayout.EAST);
 
-        programPanel.add(leftPanel, BorderLayout.WEST);
+        initNewLeftPanel();
+
+
         programPanel.add(rightSidePanel, BorderLayout.EAST);
         programPanel.add(workspaceToolsTopPanel, BorderLayout.NORTH);
         programPanel.add(workspacePanel, BorderLayout.CENTER);
@@ -250,21 +215,77 @@ public class MainView {
         mainFrame.setVisible(true);
     }
 
+    // TEMPORARY SETUP METHODS...--------------------------------------------------------------------------------------------------
+
+    // visual------------------------------------
+
+    // functional-------------------------------
+    private void  toolBtnsSetup(){
+
+        // tools setup
+        for (ToolNamesE tool : ToolNamesE.values()) {
+
+            JButton toolBtn = new JButton();
+            toolBtn.setSize(new Dimension(50, 50));
+            toolBtn.setIcon(TextureHelper.getToolBtnTexture(tool, 50));
+            toolBtn.setName(tool.toString());
+            toolPanel.add(toolBtn);
+            toolBtns.add(toolBtn);
+        }
+
+    }
+    private void  menuBarSetup(){
+        // menuBarSetup
+        for (menuItemsE item : menuItemsE.values()) {
+            JMenu menu = new JMenu(item.toString());
+            menuItems.add(menu);
+            menuBar.add(menu);
+        }
+        // menubar file options...setup
+        for (FileOptionsE item : FileOptionsE.values()) {
+            JMenuItem menuItem = new JMenuItem(item.toString());
+            menuItem.setName(item.toString());
+            menuOptions.add(menuItem);
+            menuItems.get(0).add(menuItem);
+        }
+
+    }
+
+    //------------------------------------------
+    private void workspacePanelInit(){
+
+        workspacePanel = new JPanel();
+        workspacePanel.setToolTipText("workspace");
+        workspacePanel.setBackground(new Color(107, 107, 107));
+        workspacePanel.setLayout(null);
+
+    }
 
 
 
+    // NEW VIEW SETUP  Improved------------------------------------------------------------------------------------------------------------------
+    // new global vars
+    private LeftSidePanelV2 leftSidePanelV2;
 
+   private  void initNewLeftPanel(){
+        leftSidePanelV2=new LeftSidePanelV2();
+        programPanel.add(leftSidePanelV2,BorderLayout.WEST);
+   }
 
+   //new control methods and getters...
+    public  LeftSidePanelV2 getLeftSidePanelV2(){
+       return leftSidePanelV2;
+    }
 
 
 
     public ArrayList<JButton> getToolBtns() {
-        return toolBtns;
+        return leftSidePanelV2.getToolPanel().getToolBtns();
     }
     public void addMaterial(FileDataModel data) {
         Dimension materialDim = new Dimension(((int) data.materialDim.getWidth() * 10),
                 ((int) data.materialDim.getHeight() * 10));
-        materialOriginalDim = materialDim;
+
 
 
         materialLayers.setDefaultSize(materialDim);
@@ -380,22 +401,7 @@ public class MainView {
         return  getBoard().getDrawingsModel();
     }
 
-    // for action listner ->new layer
-    public JButton getAddLayerBtn() {
-        return addLayerBtn;
-    }
 
-    // add Layer Panel With Btn
-    public void addLayer(LayerPanel panel) {
-
-        layersPanel.add(panel);
-        mainFrame.refresh();
-    }
-
-    // layers are in binary tree -> remove then re-add stuff
-    public void removeLayers(){
-        layersPanel.removeAll();
-  }
 
     public JButton getWorkspaceShowPointsBtn(){
         return  showConnectPoints;

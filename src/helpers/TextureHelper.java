@@ -1,7 +1,7 @@
 package helpers;
 
-import helpers.enums.ToolNamesE;
-import helpers.enums.WorkspaceToolBtnsE;
+import Enums.ToolNamesE;
+import Enums.WorkspaceToolBtnsE;
 
 import javax.swing.*;
 import java.awt.*;

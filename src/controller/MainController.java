@@ -1,26 +1,14 @@
 package controller;
 
 import View.MainView;
-import View.ViewUIComponents.DrawingBoard;
-import controller.AEclasses.PointAL;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
-import controller.callbacks.MouseCallBacks;
 import controller.callbacks.NewFileCallBack;
-import controller.callbacks.PointPressedCallBack;
-import helpers.*;
-import helpers.enums.FileOptionsE;
+import Enums.FileOptionsE;
 import model.*;
 
 import javax.swing.*;
-import javax.tools.Tool;
-import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-
-import helpers.enums.ToolNamesE;
-
-import static helpers.ToolStateTracker.*;
 
 public class MainController implements NewFileCallBack {
     MainView view;
@@ -51,10 +39,10 @@ public class MainController implements NewFileCallBack {
 
             zoomController =new ZoomController(view);
             panningController=new PanningController(view);
-            layerController=new LayerController();
+            layerController=new LayerController(view);
             toolController=new ToolController(view);
 
-            layerController.setMainView(view);
+
 
 
 
@@ -85,9 +73,6 @@ public class MainController implements NewFileCallBack {
 
 
         // select layer btn
-        view.getAddLayerBtn().addActionListener(e -> {
-            layerController.addLayer();
-        });
 
 
 

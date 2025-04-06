@@ -6,7 +6,7 @@ import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.callbacks.MouseCallBacks;
 import helpers.PointScaler;
 import helpers.TextureHelper;
-import helpers.enums.ToolNamesE;
+import Enums.ToolNamesE;
 import model.LineModel;
 import model.PointModel;
 

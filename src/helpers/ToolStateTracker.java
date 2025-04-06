@@ -1,7 +1,7 @@
 package helpers;
 
-import helpers.enums.ToolNamesE;
-import helpers.enums.ToolStatesE;
+import Enums.ToolNamesE;
+import Enums.ToolStatesE;
 
 public  class ToolStateTracker {
 public static ToolNamesE activeTool;
