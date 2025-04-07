@@ -9,7 +9,7 @@ public class ToolBtn extends JButton {
   private ToolNamesE name;
 
   // improved... za preko controller ->handle event
-    public ToolBtn(Controller controller,ToolNamesE name){
+    public ToolBtn(Controller controller, ToolNamesE name){
         this.name=name;
         this.addActionListener(controller::handleAction);
 

@@ -1,7 +1,6 @@
 package View.MainViewV2.MainViewParts.LeftSidePanel.parts.Layers;
 
 import Enums.ControllerActionEventNamesE;
-import View.MainView;
 import View.MainViewV2.MainViewParts.LeftSidePanel.parts.Layers.parts.LayerBtn;
 import View.MainViewV2.MainViewParts.LeftSidePanel.parts.Layers.parts.LayersListScrollPanel;
 import controller.standard.Controller;
@@ -34,11 +33,11 @@ public class LayersMainPanel extends JPanel {
     public void setController(Controller controller) {
 
         this.controller = controller;
-        addLayerBtn.addActionListener(e->controller.handleAction(e, ControllerActionEventNamesE.addLayerBtnClick));
+        addLayerBtn.addActionListener(e-> controller.handleAction(e, ControllerActionEventNamesE.addLayerBtnClick));
     }
 
     public  void addNewLayer(LayerModelV2 modelV2){
-        if(controller==null){
+        if(controller ==null){
             System.out.println("set layer controller for layerBtns first!");
             return;
         }

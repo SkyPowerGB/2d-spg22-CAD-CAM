@@ -11,7 +11,7 @@ import java.awt.*;
 public class LayerBtn extends JButton {
 private LayerModelV2 model;
 
-public LayerBtn(Controller controller,LayerModelV2 model){
+public LayerBtn(Controller controller, LayerModelV2 model){
 
     setController(controller);
 
@@ -28,8 +28,8 @@ private void setupAppearance(){
 }
 
 public  void setController(Controller controller){
-    if(controller!=null){
-    this.addActionListener(e->controller.handleAction(e, ControllerActionEventNamesE.layerBtnClick));}else{
+    if(controller !=null){
+    this.addActionListener(e-> controller.handleAction(e, ControllerActionEventNamesE.layerBtnClick));}else{
         System.out.println("Warning controller is null");
     }
 }

@@ -1,23 +1,27 @@
 package controller;
 
+import Enums.ControllerActionEventNamesE;
 import View.MainView;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.callbacks.MouseCallBacks;
+import controller.standard.Controller;
 import helpers.PointScaler;
 import helpers.TextureHelper;
 import Enums.ToolNamesE;
 import model.LineModel;
 import model.PointModel;
 
+import javax.sound.sampled.Control;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import static helpers.ToolStateTracker.getActiveTool;
 import static helpers.ToolStateTracker.setActiveTool;
 
-public class ToolController implements MouseCallBacks {
+public class ToolController extends Controller implements MouseCallBacks {
 
     MainView view;
 
@@ -133,5 +137,17 @@ public class ToolController implements MouseCallBacks {
         view.refreshWindow();
 
     }
+
+    // Controller standard methods
+    @Override
+    public void handleAction(ActionEvent e) {
+
+    }
+
+    @Override
+    public void handleAction(ActionEvent e, ControllerActionEventNamesE action) {
+
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package View;
 
 import View.MainViewV2.MainViewParts.LeftSidePanel.LeftSidePanelV2;
+import View.MainViewV2.MainViewParts.RightSidePanel.RightSidePanel;
 import View.ViewUIComponents.*;
 import helpers.TextureHelper;
 import Enums.FileOptionsE;
@@ -31,7 +32,7 @@ public class MainView {
 
     private  JPanel toolPanel;
 
-    private  JPanel topPanelWorkspaceTools;
+    private  JPanel workspaceToolsPanel;
 
     private  JButton addLayerBtn;
 
@@ -40,8 +41,8 @@ public class MainView {
 
 
     private  ArrayList<JButton> toolBtns;
-    private   JPanel rightSidePanel;
-    private JPanel workspaceToolsTopPanel;
+    private   RightSidePanel rightSidePanel;
+    private JPanel topPanel;
     private JMenuBar menuBar;
     private ArrayList<JMenu> menuItems;
     private  ArrayList<JMenuItem> menuOptions;
@@ -102,8 +103,8 @@ public class MainView {
 
 
 
-        rightSidePanel = new JPanel();
-        workspaceToolsTopPanel = new JPanel();
+        rightSidePanel = new RightSidePanel();
+        topPanel = new JPanel();
         programPanel = new JPanel();
         menuBar = new JMenuBar();
 
@@ -141,6 +142,7 @@ public class MainView {
             mainFrame.setTitle("2.5D SP-24 CAD/CAM");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setJMenuBar(menuBar);
+
         menuBar.setPreferredSize(new Dimension(mainFrame.getWidth(), 50));
         programPanel.setLayout(new BorderLayout());
 
@@ -148,18 +150,16 @@ public class MainView {
 
 
 
-        rightSidePanel.setBackground(Color.ORANGE);
-        rightSidePanel.setPreferredSize(new Dimension(100, frameSize.height));
-        rightSidePanel.setToolTipText("RightSidePanel");
 
-        workspaceToolsTopPanel.setBackground(Color.blue);
-        workspaceToolsTopPanel.setPreferredSize(new Dimension(frameSize.width, 50));
-        workspaceToolsTopPanel.setLayout(new GridLayout(1,20));
-        workspaceToolsTopPanel.setToolTipText("workspaceTools");
 
-        topPanelWorkspaceTools =new JPanel();
-        topPanelWorkspaceTools.setLayout(new GridLayout(1,3));
-        topPanelWorkspaceTools.setBackground(Color.cyan);
+        topPanel.setBackground(Color.blue);
+        topPanel.setPreferredSize(new Dimension(frameSize.width, 50));
+        topPanel.setLayout(new GridLayout(1,20));
+        topPanel.setToolTipText("workspaceTools");
+
+        workspaceToolsPanel =new JPanel();
+        workspaceToolsPanel.setLayout(new GridLayout(1,3));
+        workspaceToolsPanel.setBackground(Color.cyan);
 ;
 
         int wrkSpcToolsBtnSize =60;
@@ -180,17 +180,17 @@ public class MainView {
         workspaceScaleDefault.addActionListener(e->{setScale(1);});
         workspaceHomeLoc.addActionListener(e->{material.setLocation(0,0);});
 
-        topPanelWorkspaceTools.add(hideConnectPoints);
-        topPanelWorkspaceTools.add(showConnectPoints);
-        topPanelWorkspaceTools.add(workspaceHomeLoc);
-        topPanelWorkspaceTools.add(workspaceScaleDefault);
+        workspaceToolsPanel.add(hideConnectPoints);
+        workspaceToolsPanel.add(showConnectPoints);
+        workspaceToolsPanel.add(workspaceHomeLoc);
+        workspaceToolsPanel.add(workspaceScaleDefault);
 
 
 
 
-       workspaceToolsTopPanel.add(new JPanel());
-        workspaceToolsTopPanel.add(topPanelWorkspaceTools);
-        workspaceToolsTopPanel.add(new JPanel());
+       topPanel.add(new JPanel());
+        topPanel.add(workspaceToolsPanel);
+        topPanel.add(new JPanel());
 
 
 
@@ -203,7 +203,7 @@ public class MainView {
 
 
         programPanel.add(rightSidePanel, BorderLayout.EAST);
-        programPanel.add(workspaceToolsTopPanel, BorderLayout.NORTH);
+        programPanel.add(topPanel, BorderLayout.NORTH);
         programPanel.add(workspacePanel, BorderLayout.CENTER);
         programPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -219,21 +219,7 @@ public class MainView {
 
     // visual------------------------------------
 
-    // functional-------------------------------
-    private void  toolBtnsSetup(){
 
-        // tools setup
-        for (ToolNamesE tool : ToolNamesE.values()) {
-
-            JButton toolBtn = new JButton();
-            toolBtn.setSize(new Dimension(50, 50));
-            toolBtn.setIcon(TextureHelper.getToolBtnTexture(tool, 50));
-            toolBtn.setName(tool.toString());
-            toolPanel.add(toolBtn);
-            toolBtns.add(toolBtn);
-        }
-
-    }
     private void  menuBarSetup(){
         // menuBarSetup
         for (menuItemsE item : menuItemsE.values()) {

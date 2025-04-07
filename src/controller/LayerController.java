@@ -6,19 +6,15 @@ import View.MainView;
 import View.ViewUIComponents.DrawingBoard;
 import View.ViewUIComponents.LayerPanel;
 import controller.standard.Controller;
-import helpers.DepthColorMap;
 import model.FileDataModel;
 import model.LayerDrawingsModel;
-import model.LayersDataStorageModel;
 import model.V2models.LayerModelV2;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.TreeMap;
 
-public class LayerController extends Controller  {
+public class LayerController extends Controller {
     private MainView view;
    private   FileDataModel fileData;
    private LayerDrawingsModel layerDrawingModel;
