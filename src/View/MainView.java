@@ -2,6 +2,7 @@ package View;
 
 import View.MainViewV2.MainViewParts.LeftSidePanel.LeftSidePanelV2;
 import View.MainViewV2.MainViewParts.RightSidePanel.RightSidePanel;
+import View.MainViewV2.MainViewParts.TopPanel.TopPanelV2;
 import View.ViewUIComponents.*;
 import helpers.TextureHelper;
 import Enums.FileOptionsE;
@@ -28,13 +29,7 @@ public class MainView {
     private JPanel programPanel;
     private JPanel workspacePanel;
 
-    private JPanel leftPanel;
 
-    private  JPanel toolPanel;
-
-    private  JPanel workspaceToolsPanel;
-
-    private  JButton addLayerBtn;
 
 
 
@@ -42,7 +37,7 @@ public class MainView {
 
     private  ArrayList<JButton> toolBtns;
     private   RightSidePanel rightSidePanel;
-    private JPanel topPanel;
+    private TopPanelV2 topPanel;
     private JMenuBar menuBar;
     private ArrayList<JMenu> menuItems;
     private  ArrayList<JMenuItem> menuOptions;
@@ -97,14 +92,14 @@ public class MainView {
 
         workspacePanelInit();
 
-        leftPanel = new JPanel();
+
 
 
 
 
 
         rightSidePanel = new RightSidePanel();
-        topPanel = new JPanel();
+        topPanel = new TopPanelV2();
         programPanel = new JPanel();
         menuBar = new JMenuBar();
 
@@ -139,7 +134,8 @@ public class MainView {
 
         Dimension frameSize = mainFrame.getSize();
         // old code
-            mainFrame.setTitle("2.5D SP-24 CAD/CAM");
+
+        mainFrame.setTitle("2.5D SP-24 CAD/CAM");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setJMenuBar(menuBar);
 
@@ -152,45 +148,19 @@ public class MainView {
 
 
 
-        topPanel.setBackground(Color.blue);
-        topPanel.setPreferredSize(new Dimension(frameSize.width, 50));
-        topPanel.setLayout(new GridLayout(1,20));
-        topPanel.setToolTipText("workspaceTools");
 
-        workspaceToolsPanel =new JPanel();
-        workspaceToolsPanel.setLayout(new GridLayout(1,3));
-        workspaceToolsPanel.setBackground(Color.cyan);
-;
+
 
         int wrkSpcToolsBtnSize =60;
 
         workspaceHomeLoc = new JButton();
         workspaceHomeLoc.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.locZZ, wrkSpcToolsBtnSize));
 
-        showConnectPoints=new JButton();
-        showConnectPoints.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.showConnectDots, wrkSpcToolsBtnSize));
-
-         hideConnectPoints=new JButton();
-         hideConnectPoints.addActionListener(e->{board.removeAll(); mainFrame.refresh();});
 
 
         workspaceScaleDefault=new JButton();
         workspaceScaleDefault.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.scaleDefault, wrkSpcToolsBtnSize));
 
-        workspaceScaleDefault.addActionListener(e->{setScale(1);});
-        workspaceHomeLoc.addActionListener(e->{material.setLocation(0,0);});
-
-        workspaceToolsPanel.add(hideConnectPoints);
-        workspaceToolsPanel.add(showConnectPoints);
-        workspaceToolsPanel.add(workspaceHomeLoc);
-        workspaceToolsPanel.add(workspaceScaleDefault);
-
-
-
-
-       topPanel.add(new JPanel());
-        topPanel.add(workspaceToolsPanel);
-        topPanel.add(new JPanel());
 
 
 
@@ -263,7 +233,18 @@ public class MainView {
        return leftSidePanelV2;
     }
 
+    public  TopPanelV2 getTopPanel(){return topPanel;}
 
+    // workspace tool control btn s   temporary? functions
+    public void SetHomeLoc(){
+        material.setLocation(0,0);
+    }
+    public void ResetScale(){
+       this.setScale(1);
+    }
+
+
+    //---------------------------------------------------------------------------------------------------------------
 
     public ArrayList<JButton> getToolBtns() {
         return leftSidePanelV2.getToolPanel().getToolBtns();

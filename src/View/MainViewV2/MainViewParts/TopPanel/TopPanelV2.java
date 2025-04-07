@@ -11,18 +11,23 @@ public class TopPanelV2 extends JPanel {
 
     private Controller controller;
     private WorkspaceToolsPanel wToolsPanel;
-public TopPanelV2(Controller controller){
+public TopPanelV2( ){
     this.setBackground(TopPanelAppearance.topPanelBackgroundClr);
     this.setPreferredSize(new Dimension(getMaximumSize().width, TopPanelAppearance.topPanelHeight));
-    this.setLayout(new GridLayout(1,20));
+  this.setLayout(new FlowLayout());
     this.setToolTipText("workspaceTools");
 
     this.controller=controller;
-    wToolsPanel=new WorkspaceToolsPanel(controller);
-    this.add(wToolsPanel);
+
 }
 
-public  WorkspaceToolsPanel getWToolsPanel(){
+    public void setWorkspaceToolController(Controller controller) {
+        this.controller = controller;
+        wToolsPanel=new WorkspaceToolsPanel(controller);
+        this.add(wToolsPanel);
+    }
+
+    public  WorkspaceToolsPanel getWToolsPanel(){
     return  wToolsPanel;
 }
 public void addWorkspaceToolBtn(WorkspaceToolBtnsE toolNm){

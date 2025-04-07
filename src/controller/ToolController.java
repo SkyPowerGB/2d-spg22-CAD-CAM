@@ -1,7 +1,9 @@
 package controller;
 
 import Enums.ControllerActionEventNamesE;
+import Enums.WorkspaceToolBtnsE;
 import View.MainView;
+import View.MainViewV2.MainViewParts.TopPanel.WorkspaceTools.parts.WorkspaceToolBtn;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.callbacks.MouseCallBacks;
@@ -27,6 +29,8 @@ public class ToolController extends Controller implements MouseCallBacks {
 
     public ToolController(MainView view){
         this.view=view;
+        view.getTopPanel().setWorkspaceToolController(this);
+
         ArrayList<JButton> toolBtns = view.getToolBtns();
         for (JButton btn : toolBtns) {
             btn.setBackground(null);
@@ -34,6 +38,7 @@ public class ToolController extends Controller implements MouseCallBacks {
             btn.addActionListener(e -> {
                 toolBtnPressed((JButton) e.getSource());
             });
+
         }
 
         WorkspaceMouseListener workspaceMouseListener = new WorkspaceMouseListener(this);
@@ -146,7 +151,18 @@ public class ToolController extends Controller implements MouseCallBacks {
 
     @Override
     public void handleAction(ActionEvent e, ControllerActionEventNamesE action) {
+        if(ControllerActionEventNamesE.wToolBtn==action){
+            WorkspaceToolBtn btn=(WorkspaceToolBtn) e.getSource();
+            if(btn.getToolName()== WorkspaceToolBtnsE.scaleDefault){
+                view.ResetScale();
 
+            }
+            if(btn.getToolName()==WorkspaceToolBtnsE.locZZ){
+                view.SetHomeLoc();
+            }
+
+
+        }
     }
 
 
