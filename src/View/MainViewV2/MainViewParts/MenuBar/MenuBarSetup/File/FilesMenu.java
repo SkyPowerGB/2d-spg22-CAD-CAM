@@ -2,7 +2,7 @@ package View.MainViewV2.MainViewParts.MenuBar.MenuBarSetup.File;
 
 import Enums.ControllerActionEventNamesE;
 import View.MainViewV2.MainViewParts.MenuBar.MenuBarItem;
-import View.MainViewV2.MainViewParts.MenuBar.MenuBarSetup.MenuOptionsE;
+import Enums.MenuOptionsE;
 import controller.standard.Controller;
 
 import javax.swing.*;

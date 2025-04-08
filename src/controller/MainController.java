@@ -43,7 +43,7 @@ public class MainController implements NewFileCallBack {
             panningController=new PanningController(view);
             layerController=new LayerController(view);
             toolController=new ToolController(view);
-            newFileController=new NewFileController(view,layerController);
+            newFileController=new NewFileController(view);
 
 
 

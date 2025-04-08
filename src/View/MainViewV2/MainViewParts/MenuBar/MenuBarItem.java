@@ -1,6 +1,6 @@
 package View.MainViewV2.MainViewParts.MenuBar;
 
-import View.MainViewV2.MainViewParts.MenuBar.MenuBarSetup.MenuOptionsE;
+import Enums.MenuOptionsE;
 
 import javax.swing.*;
 

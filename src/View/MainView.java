@@ -187,15 +187,7 @@ public class MainView {
 
     // TEMPORARY SETUP METHODS...--------------------------------------------------------------------------------------------------
 
-    // visual------------------------------------
 
-
-    private void  menuBarSetup(){
-
-
-    }
-
-    //------------------------------------------
     private void workspacePanelInit(){
 
         workspacePanel = new JPanel();
@@ -215,6 +207,8 @@ public class MainView {
         leftSidePanelV2=new LeftSidePanelV2();
         programPanel.add(leftSidePanelV2,BorderLayout.WEST);
    }
+
+
 
    //new control methods and getters...
     public  LeftSidePanelV2 getLeftSidePanelV2(){
