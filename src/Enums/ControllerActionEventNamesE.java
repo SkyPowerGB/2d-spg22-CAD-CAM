@@ -1,5 +1,5 @@
 package Enums;
 
 public enum ControllerActionEventNamesE {
-    addLayerBtnClick,layerBtnClick,wToolBtn
+    addLayerBtnClick,layerBtnClick,wToolBtn,menuItemClick
 }

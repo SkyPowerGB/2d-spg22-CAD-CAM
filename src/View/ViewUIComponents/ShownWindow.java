@@ -15,6 +15,7 @@ public class ShownWindow extends JFrame {
 
     public void refresh(){
         this.repaint();
+        this.revalidate();
         this.setVisible(true);
     }
 

@@ -1,12 +1,13 @@
 package View;
 
+import View.MainViewV2.MainViewParts.BottomPanel.BottomPanelV2;
 import View.MainViewV2.MainViewParts.LeftSidePanel.LeftSidePanelV2;
+import View.MainViewV2.MainViewParts.MenuBar.MenuBarV2;
 import View.MainViewV2.MainViewParts.RightSidePanel.RightSidePanel;
 import View.MainViewV2.MainViewParts.TopPanel.TopPanelV2;
 import View.ViewUIComponents.*;
 import helpers.TextureHelper;
 import Enums.FileOptionsE;
-import Enums.ToolNamesE;
 import Enums.WorkspaceToolBtnsE;
 import Enums.menuItemsE;
 import helpers.helperModels.RectangleSpanHelper;
@@ -23,7 +24,7 @@ public class MainView {
 
    private JButton hideConnectPoints, showConnectPoints, workspaceHomeLoc,workspaceScaleDefault;
 
-    private JPanel bottomPanel;
+    private BottomPanelV2 bottomPanel;
     private ShownWindow mainFrame;
 
     private JPanel programPanel;
@@ -38,18 +39,17 @@ public class MainView {
     private  ArrayList<JButton> toolBtns;
     private   RightSidePanel rightSidePanel;
     private TopPanelV2 topPanel;
-    private JMenuBar menuBar;
-    private ArrayList<JMenu> menuItems;
-    private  ArrayList<JMenuItem> menuOptions;
+
+
     private LayerDrawingsModel drawingsModel;
     private  DrawingBoard board;
     private  ScalablePanel material;
 
 
-    private  JLabel scaleLbl;
     private   double scale = 1;
 
 
+     MenuBarV2 menuBarV2;
 
 
     ScalableLayeredPane materialLayers;
@@ -75,11 +75,6 @@ public class MainView {
 
 
 
-        menuItems = new ArrayList<>();
-
-        menuOptions = new ArrayList<>();
-
-
 
         mainFrame = new ShownWindow();
 
@@ -101,17 +96,21 @@ public class MainView {
         rightSidePanel = new RightSidePanel();
         topPanel = new TopPanelV2();
         programPanel = new JPanel();
-        menuBar = new JMenuBar();
 
 
 
 
 
-        bottomPanel = new JPanel();
-        bottomPanel.setPreferredSize(new Dimension(mainFrame.getWidth(), 50));
 
-        scaleLbl = new JLabel();
-        scaleLbl.setText(String.valueOf(scale));
+
+
+
+        bottomPanel = new BottomPanelV2();
+
+          bottomPanel.setScaleTxt(scale);
+
+
+
 
         material = new ScalablePanel();
         material.setBackground(Color.white);
@@ -129,17 +128,20 @@ public class MainView {
 
 
         // menuBarSetup
-        menuBarSetup();
 
+         menuBarV2=new MenuBarV2();
+        mainFrame.setJMenuBar(menuBarV2);
 
-        Dimension frameSize = mainFrame.getSize();
         // old code
 
         mainFrame.setTitle("2.5D SP-24 CAD/CAM");
         mainFrame.setLayout(new BorderLayout());
-        mainFrame.setJMenuBar(menuBar);
 
-        menuBar.setPreferredSize(new Dimension(mainFrame.getWidth(), 50));
+
+
+
+
+
         programPanel.setLayout(new BorderLayout());
 
 
@@ -167,8 +169,6 @@ public class MainView {
 
 
 
-        bottomPanel.add(scaleLbl,BorderLayout.EAST);
-
         initNewLeftPanel();
 
 
@@ -191,19 +191,7 @@ public class MainView {
 
 
     private void  menuBarSetup(){
-        // menuBarSetup
-        for (menuItemsE item : menuItemsE.values()) {
-            JMenu menu = new JMenu(item.toString());
-            menuItems.add(menu);
-            menuBar.add(menu);
-        }
-        // menubar file options...setup
-        for (FileOptionsE item : FileOptionsE.values()) {
-            JMenuItem menuItem = new JMenuItem(item.toString());
-            menuItem.setName(item.toString());
-            menuOptions.add(menuItem);
-            menuItems.get(0).add(menuItem);
-        }
+
 
     }
 
@@ -234,6 +222,8 @@ public class MainView {
     }
 
     public  TopPanelV2 getTopPanel(){return topPanel;}
+
+    public MenuBarV2 getMenuBarV2() {return menuBarV2;}
 
     // workspace tool control btn s   temporary? functions
     public void SetHomeLoc(){
@@ -283,7 +273,7 @@ public class MainView {
     }
 
     private void zoomInOut() {
-        scaleLbl.setText(String.valueOf(scale));
+        bottomPanel.setScaleTxt(scale);
 
         material.setScale(scale);
         materialLayers.setScale(scale);
@@ -334,9 +324,7 @@ public class MainView {
         mainFrame.refresh();
     }
 
-    public ArrayList<JMenuItem> getMenuOptions() {
-        return menuOptions;
-    }
+
 
 
     public void refreshWindow() {
@@ -370,9 +358,6 @@ public class MainView {
 
 
 
-    public JButton getWorkspaceShowPointsBtn(){
-        return  showConnectPoints;
-    }
 
 
 }

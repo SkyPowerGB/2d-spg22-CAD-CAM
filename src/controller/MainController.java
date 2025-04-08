@@ -1,6 +1,7 @@
 package controller;
 
 import View.MainView;
+import View.defaults.View;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.callbacks.NewFileCallBack;
@@ -25,6 +26,7 @@ public class MainController implements NewFileCallBack {
     PanningController panningController;
     ZoomController zoomController;
     ToolController toolController;
+    NewFileController newFileController;
 
 
     public MainController() {
@@ -41,6 +43,7 @@ public class MainController implements NewFileCallBack {
             panningController=new PanningController(view);
             layerController=new LayerController(view);
             toolController=new ToolController(view);
+            newFileController=new NewFileController(view,layerController);
 
 
 
@@ -50,15 +53,7 @@ public class MainController implements NewFileCallBack {
 
 
 
-        for (JMenuItem item : view.getMenuOptions()) {
-            item.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JMenuItem option = (JMenuItem) e.getSource();
-                    menuOptionClicked(option.getName());
-                }
-            });
-        }
+
 
 
         // get workspace + add listeners ------------------------------------------------------------------------
@@ -84,14 +79,6 @@ public class MainController implements NewFileCallBack {
 
     // TO DO razdvojit main controller na: zooming,panning,tools ->(line,),file,
 
-    private void menuOptionClicked(String name) {
-
-
-        if (name.contentEquals(FileOptionsE.new_file.toString())) {
-            NewFileController controllerB = new NewFileController(this);
-            System.out.println("newFileCreated");
-        }
-    }
 
     //callbacks
     @Override
