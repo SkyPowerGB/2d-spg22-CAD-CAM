@@ -43,6 +43,6 @@ The new branch represents an attempt to refactor and improve the codebase for fu
 
 ## 🎯 Purpose
 
-Developed as an experimental learning project to understand GUI development with Java Swing and basic CAD concepts.
+Developed as an sideproject for making gcode for my diy cnc 
 
 ---
