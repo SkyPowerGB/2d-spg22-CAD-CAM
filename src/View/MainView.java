@@ -22,24 +22,25 @@ import java.util.ArrayList;
 
 public class MainView {
 
+
+
    private JButton hideConnectPoints, showConnectPoints, workspaceHomeLoc,workspaceScaleDefault;
 
-    private BottomPanelV2 bottomPanel;
+
+
     private ShownWindow mainFrame;
 
+    // main panel
     private JPanel programPanel;
-    private JPanel workspacePanel;
 
 
-
-
-
-
-
-    private  ArrayList<JButton> toolBtns;
+     // layoutPanels
     private   RightSidePanel rightSidePanel;
+    private BottomPanelV2 bottomPanel;
     private TopPanelV2 topPanel;
 
+
+    private JPanel workspacePanel;
 
     private LayerDrawingsModel drawingsModel;
     private  DrawingBoard board;
@@ -55,14 +56,11 @@ public class MainView {
     ScalableLayeredPane materialLayers;
 
 
-    ArrayList<ScalablePanel> scalablePanels;
 
     public MainView() {
 
         initView();
     }
-
-
 
 
     private void initView() {
@@ -71,7 +69,6 @@ public class MainView {
 
 
 
-        scalablePanels = new ArrayList<>();
 
 
 
@@ -81,11 +78,9 @@ public class MainView {
         //----------------------------------------
 
 
-        drawingsModel = new LayerDrawingsModel();
-        board = new DrawingBoard(drawingsModel);
 
 
-        workspacePanelInit();
+
 
 
 
@@ -98,29 +93,31 @@ public class MainView {
         programPanel = new JPanel();
 
 
-
-
-
-
-
-
-
         bottomPanel = new BottomPanelV2();
-
-          bottomPanel.setScaleTxt(scale);
-
+        bottomPanel.setScaleTxt(scale);
 
 
 
+
+        // material is visual representation of real life material
         material = new ScalablePanel();
         material.setBackground(Color.white);
         material.setLayout(null);
 
+
+        // material layers is extension of material for displaying multiple stuff on material
         materialLayers = new ScalableLayeredPane();
 
+        // drawings model contains data that board must draw on the material
+        drawingsModel = new LayerDrawingsModel();
+
+        // drawing board displays drawingsModel
+        board = new DrawingBoard(drawingsModel);
         board.setBackground(Color.ORANGE);
-        materialLayers.add(board);
         board.setSize(500, 500);
+
+        // setup material with new components
+        materialLayers.add(board);
         materialLayers.setSize(500, 500);
         material.add(materialLayers);
 
@@ -128,57 +125,24 @@ public class MainView {
 
 
         // menuBarSetup
-
-         menuBarV2=new MenuBarV2();
+        menuBarV2=new MenuBarV2();
         mainFrame.setJMenuBar(menuBarV2);
 
         // old code
-
         mainFrame.setTitle("2.5D SP-24 CAD/CAM");
         mainFrame.setLayout(new BorderLayout());
 
 
-
-
-
-
         programPanel.setLayout(new BorderLayout());
 
-
-
-
-
-
-
-
-
-
-        int wrkSpcToolsBtnSize =60;
-
-        workspaceHomeLoc = new JButton();
-        workspaceHomeLoc.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.locZZ, wrkSpcToolsBtnSize));
-
-
-
-        workspaceScaleDefault=new JButton();
-        workspaceScaleDefault.setIcon(TextureHelper.getControlBtnTexture(WorkspaceToolBtnsE.scaleDefault, wrkSpcToolsBtnSize));
-
-
-
-
-
-
-
         initNewLeftPanel();
+        workspacePanelInit();
 
 
         programPanel.add(rightSidePanel, BorderLayout.EAST);
         programPanel.add(topPanel, BorderLayout.NORTH);
         programPanel.add(workspacePanel, BorderLayout.CENTER);
         programPanel.add(bottomPanel, BorderLayout.SOUTH);
-
-
-
 
 
         mainFrame.add(programPanel);
@@ -246,7 +210,7 @@ public class MainView {
 
         board.setDefaultSize(materialDim);
         board.setSize(materialDim);
-        scalablePanels.add(board);
+
 
         board.setScale(1);
 
@@ -273,11 +237,7 @@ public class MainView {
         materialLayers.setScale(scale);
         board.setScale(scale);
 
-        mainFrame.setVisible(true);
-        for (ScalablePanel comp : scalablePanels) {
 
-            comp.setScale(scale);
-        }
     }
 
     //public methods
