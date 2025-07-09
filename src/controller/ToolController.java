@@ -13,6 +13,7 @@ import helpers.TextureHelper;
 import Enums.ToolNamesE;
 import model.LineModel;
 import model.PointModel;
+import model.V2models.ViewStateModel;
 
 import javax.sound.sampled.Control;
 import javax.swing.*;
@@ -27,8 +28,10 @@ public class ToolController extends Controller implements MouseCallBacks {
 
     MainView view;
 
-    public ToolController(MainView view){
+    ViewStateModel viewStateModel;
+    public ToolController(MainView view, ViewStateModel viewStateModel){
         this.view=view;
+        this.viewStateModel=viewStateModel;
         view.getTopPanel().setWorkspaceToolController(this);
 
         ArrayList<JButton> toolBtns = view.getToolBtns();
@@ -65,7 +68,7 @@ public class ToolController extends Controller implements MouseCallBacks {
     public void click(Point p) {
         if (view.isPointOnMaterial(p)) {
             Point click = view.recalcWorkspaceToMaterial(p);
-            click= PointScaler.getDefaultPoint(click,view.getScale());
+            click= PointScaler.getDefaultPoint(click, viewStateModel.getScale());
             clickOnMaterial(click);
         }
 
@@ -96,7 +99,7 @@ public class ToolController extends Controller implements MouseCallBacks {
         if(true){
             if(!view.isPointOnMaterial(currPos)){return;}
             currPos=view.recalcWorkspaceToMaterial(currPos);
-            currPos=PointScaler.getDefaultPoint(currPos,view.getScale());
+            currPos=PointScaler.getDefaultPoint(currPos, viewStateModel.getScale());
             mouseMovedFollow(currPos);
         }
     }
@@ -154,11 +157,13 @@ public class ToolController extends Controller implements MouseCallBacks {
         if(ControllerActionEventNamesE.wToolBtn==action){
             WorkspaceToolBtn btn=(WorkspaceToolBtn) e.getSource();
             if(btn.getToolName()== WorkspaceToolBtnsE.scaleDefault){
-                view.ResetScale();
+                viewStateModel.setScale(1);
+               view.refreshWindow();
 
             }
             if(btn.getToolName()==WorkspaceToolBtnsE.locZZ){
-                view.SetHomeLoc();
+                viewStateModel.setMaterialLocation(new Point(0,0));
+                view.refreshWindow();
             }
 
 

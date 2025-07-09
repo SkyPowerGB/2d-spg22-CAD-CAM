@@ -1,25 +1,25 @@
 package controller;
 
 import View.MainView;
-import View.defaults.View;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.callbacks.NewFileCallBack;
-import Enums.FileOptionsE;
 import model.*;
+import model.V2models.ViewStateModel;
 
 import javax.swing.*;
-import java.awt.event.*;
 
 public class MainController implements NewFileCallBack {
     MainView view;
+
+
 
 
     WorkspaceMouseMotionListener mouseMotionListener;
     WorkspaceMouseListener workspaceMouseListener;
 
 
-    FileDataModel data;
+    FileDataModel fileDataModel;
 
 
     LayerController layerController;
@@ -29,27 +29,31 @@ public class MainController implements NewFileCallBack {
     NewFileController newFileController;
 
 
+    // view models new
+    ViewStateModel viewStateModel;
     public MainController() {
 
-        // prep callbacks---------------------------------------------------------------------------------
+
+        // CREATE MODELS
 
 
+        viewStateModel =new ViewStateModel();
+        fileDataModel =new FileDataModel();
 
 
         // create view
         view = new MainView();
+        view.setViewStateModel(viewStateModel);
+        view.setFileDataModel(fileDataModel);
 
-            zoomController =new ZoomController(view);
-            panningController=new PanningController(view);
+            zoomController =new ZoomController(view,viewStateModel);
+            panningController=new PanningController(view,viewStateModel);
             layerController=new LayerController(view);
-            toolController=new ToolController(view);
+            toolController=new ToolController(view,viewStateModel);
             newFileController=new NewFileController(view);
 
 
 
-
-
-        // get  buttons and setup their listeners -------------------------------------------------
 
 
 
@@ -83,11 +87,11 @@ public class MainController implements NewFileCallBack {
     //callbacks
     @Override
     public void onFileCreate(FileDataModel data) {
-        this.data = data;
+        this.fileDataModel = data;
         LayersDataStorageModel.setFileData(data);
         layerController.setFileData(LayersDataStorageModel.getFileData());
 
-        view.addMaterial(LayersDataStorageModel.getFileData());
+        view.setFileDataModel(LayersDataStorageModel.getFileData());
         view.refreshWindow();
 
 

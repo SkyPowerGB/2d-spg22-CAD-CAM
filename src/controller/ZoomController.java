@@ -5,6 +5,7 @@ import controller.AEclasses.WorkspaceMouseWheelListener;
 
 import controller.callbacks.ZoomCallBack;
 import helpers.helperModels.LineEqCalculator;
+import model.V2models.ViewStateModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +13,11 @@ import java.awt.*;
 public class ZoomController implements ZoomCallBack {
 
     MainView view;
+    ViewStateModel viewStateModel;
 
-    public ZoomController(MainView view){
+    public ZoomController(MainView view,ViewStateModel viewStateModel){
         this.view=view;
+        this.viewStateModel=viewStateModel;
 
         WorkspaceMouseWheelListener mouseWheelListener=new WorkspaceMouseWheelListener(this);
         JPanel workspace=view.getWorkspacePanel();
@@ -37,7 +40,7 @@ public class ZoomController implements ZoomCallBack {
     public void zoom_in_out(int factor, Point position, boolean dir) {
         double ammount = 0.1;
         byte relation = 0;
-        Point workspacePos = view.getMaterialPos();
+        Point workspacePos = viewStateModel.getMaterialLocation();
         if (workspacePos.x > position.x && workspacePos.y > position.y) {
             relation = 1;
         } else if (workspacePos.x > position.x && workspacePos.y < position.y) {
@@ -50,12 +53,12 @@ public class ZoomController implements ZoomCallBack {
 
         LineEqCalculator ln;
 
-        double moveX = view.getMaterial().getSize().getWidth() * (ammount / 2);
+        double moveX = view.getMaterialPanel().getSize().getWidth() * (ammount / 2);
 
         int nextX;
 
 
-        Point materialPos = view.getMaterialPos();
+        Point materialPos = viewStateModel.getMaterialLocation();
 
         if (relation == 3 || relation == 4) {
             ln = new LineEqCalculator(position, materialPos);
@@ -64,12 +67,12 @@ public class ZoomController implements ZoomCallBack {
         }
 
 
-        double scale = view.getScale();
+        double scale = viewStateModel.getScale();
 
         if (scale <= 0.2) {
             scale = 0.3;
 
-            view.setScale(scale);
+         viewStateModel.setScale(scale);
 
 
             view.refreshWindow();
@@ -88,8 +91,10 @@ public class ZoomController implements ZoomCallBack {
         int nexY = ln.calcY(nextX);
 
         Point newLoc = new Point(nextX, nexY);
-        view.setMaterialLoc(newLoc);
-        view.setScale(scale);
+
+        viewStateModel.setMaterialLocation(newLoc);
+        viewStateModel.setScale(scale);
+
 
         view.refreshWindow();
 

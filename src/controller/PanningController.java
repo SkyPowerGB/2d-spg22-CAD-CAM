@@ -4,6 +4,7 @@ import View.MainView;
 import controller.AEclasses.WorkspaceMouseListener;
 import controller.AEclasses.WorkspaceMouseMotionListener;
 import controller.callbacks.MouseCallBacks;
+import model.V2models.ViewStateModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +17,12 @@ public class PanningController implements MouseCallBacks {
     private int prevX, prevY;
     private int offsetX, offsetY;
 
-    public  PanningController(MainView view){
+    private ViewStateModel viewStateModel;
+
+    public  PanningController(MainView view, ViewStateModel viewStateModel){
         this.view=view;
+        this.viewStateModel=viewStateModel;
+
         WorkspaceMouseListener workspaceMouseListener = new WorkspaceMouseListener(this);
         WorkspaceMouseMotionListener mouseMotionListener = new WorkspaceMouseMotionListener(this);
         JPanel workspace=view.getWorkspacePanel();
@@ -40,8 +45,8 @@ public class PanningController implements MouseCallBacks {
         middleButtonPressed = true;
         prevX = location.x;
         prevY = location.y;
-        offsetX = view.getMaterialPos().x - prevX;
-        offsetY = view.getMaterialPos().y - prevY;
+        offsetX =viewStateModel.getMaterialLocation().x - prevX;
+        offsetY = viewStateModel.getMaterialLocation().y- prevY;
 
     }
 
@@ -54,7 +59,7 @@ public class PanningController implements MouseCallBacks {
             int newPosX = offsetX + currX;
             int newPosY = offsetY + currY;
 
-            view.setMaterialLoc(new Point(newPosX, newPosY));
+            viewStateModel.setMaterialLocation(new Point(newPosX, newPosY));
             view.refreshWindow();
         }
     }

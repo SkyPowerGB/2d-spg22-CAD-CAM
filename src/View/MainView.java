@@ -6,13 +6,10 @@ import View.MainViewV2.MainViewParts.MenuBar.MenuBarV2;
 import View.MainViewV2.MainViewParts.RightSidePanel.RightSidePanel;
 import View.MainViewV2.MainViewParts.TopPanel.TopPanelV2;
 import View.ViewUIComponents.*;
-import helpers.TextureHelper;
-import Enums.FileOptionsE;
-import Enums.WorkspaceToolBtnsE;
-import Enums.menuItemsE;
 import helpers.helperModels.RectangleSpanHelper;
 import model.FileDataModel;
 import model.LayerDrawingsModel;
+import model.V2models.ViewStateModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -22,38 +19,38 @@ import java.util.ArrayList;
 
 public class MainView {
 
-
-
    private JButton hideConnectPoints, showConnectPoints, workspaceHomeLoc,workspaceScaleDefault;
-
-
-
     private ShownWindow mainFrame;
-
     // main panel
     private JPanel programPanel;
 
 
+
      // layoutPanels
-    private   RightSidePanel rightSidePanel;
-    private BottomPanelV2 bottomPanel;
-    private TopPanelV2 topPanel;
-
-
-    private JPanel workspacePanel;
-
-    private LayerDrawingsModel drawingsModel;
-    private  DrawingBoard board;
-    private  ScalablePanel material;
-
-
-    private   double scale = 1;
-
 
      MenuBarV2 menuBarV2;
+    private RightSidePanel rightSidePanel;
+    private BottomPanelV2 bottomPanel;
+    private TopPanelV2 topPanel;
+    private JPanel workspacePanel;
 
+
+
+
+    // drawing panels
 
     ScalableLayeredPane materialLayers;
+    private DrawingBoard drawingBoardPanel;
+    private ScalablePanel materialPanel;
+
+
+
+//---------------------------------------------------------------------------------------------------
+    // models
+
+    private ViewStateModel viewStateModel;
+    private FileDataModel fileDataModel;
+    private LayerDrawingsModel drawingsModel;
 
 
 
@@ -94,15 +91,15 @@ public class MainView {
 
 
         bottomPanel = new BottomPanelV2();
-        bottomPanel.setScaleTxt(scale);
+        bottomPanel.setScaleTxt(1);
 
 
 
 
         // material is visual representation of real life material
-        material = new ScalablePanel();
-        material.setBackground(Color.white);
-        material.setLayout(null);
+        materialPanel = new ScalablePanel();
+        materialPanel.setBackground(Color.white);
+        materialPanel.setLayout(null);
 
 
         // material layers is extension of material for displaying multiple stuff on material
@@ -112,14 +109,14 @@ public class MainView {
         drawingsModel = new LayerDrawingsModel();
 
         // drawing board displays drawingsModel
-        board = new DrawingBoard(drawingsModel);
-        board.setBackground(Color.ORANGE);
-        board.setSize(500, 500);
+        drawingBoardPanel = new DrawingBoard(drawingsModel);
+        drawingBoardPanel.setBackground(Color.ORANGE);
+        drawingBoardPanel.setSize(500, 500);
 
         // setup material with new components
-        materialLayers.add(board);
+        materialLayers.add(drawingBoardPanel);
         materialLayers.setSize(500, 500);
-        material.add(materialLayers);
+        materialPanel.add(materialLayers);
 
 
 
@@ -135,7 +132,7 @@ public class MainView {
 
         programPanel.setLayout(new BorderLayout());
 
-        initNewLeftPanel();
+        initLeftPanel();
         workspacePanelInit();
 
 
@@ -167,14 +164,14 @@ public class MainView {
     // new global vars
     private LeftSidePanelV2 leftSidePanelV2;
 
-   private  void initNewLeftPanel(){
+   private  void initLeftPanel(){
         leftSidePanelV2=new LeftSidePanelV2();
         programPanel.add(leftSidePanelV2,BorderLayout.WEST);
    }
 
 
 
-   //new control methods and getters...
+   //new control methods and getters...   for setting up buttons with events
     public  LeftSidePanelV2 getLeftSidePanelV2(){
        return leftSidePanelV2;
     }
@@ -183,23 +180,108 @@ public class MainView {
 
     public MenuBarV2 getMenuBarV2() {return menuBarV2;}
 
-    // workspace tool control btn s   temporary? functions
-    public void SetHomeLoc(){
-        material.setLocation(0,0);
+    public ArrayList<JButton> getToolBtns(){
+
+        return leftSidePanelV2.getToolPanel().getToolBtns();
     }
-    public void ResetScale(){
-       this.setScale(1);
+
+    public JPanel getWorkspacePanel() {
+
+       return workspacePanel;
     }
+
+    public ScalablePanel getMaterialPanel() {
+
+       return materialPanel;
+    }
+
 
 
     //---------------------------------------------------------------------------------------------------------------
 
-    public ArrayList<JButton> getToolBtns() {
-        return leftSidePanelV2.getToolPanel().getToolBtns();
+
+    //public methods
+
+
+    public void refreshWindow() {
+        refreshViewStates();
+        mainFrame.refresh();
     }
-    public void addMaterial(FileDataModel data) {
-        Dimension materialDim = new Dimension(((int) data.materialDim.getWidth() * 10),
-                ((int) data.materialDim.getHeight() * 10));
+
+
+
+
+
+
+
+    // check if click is on material
+    public boolean isPointOnMaterial(Point p) {
+        return getMaterialSpan().isPointInRectangle(p);
+    }
+
+
+    // helper method, calculate click offset
+    public Point recalcWorkspaceToMaterial(@NotNull Point p) {
+        Point matLoc = materialPanel.getLocation();
+        return new Point((p.x - (matLoc.x)), (p.y - (matLoc.y)));
+
+    }
+
+
+
+    // get currentBoardModel
+    public LayerDrawingsModel getBoardsCurrDrawingModel(){
+
+        return  getDrawingBoardPanel().getDrawingsModel();
+    }
+
+
+    //------helper methods ,private
+
+    // get material rectangle
+
+    private RectangleSpanHelper getMaterialSpan() {
+        Point matP = materialPanel.getLocation();
+        Point matE = new Point(matP.x + materialPanel.getWidth(), matP.y + materialPanel.getHeight());
+
+        return new RectangleSpanHelper(matP, matE);
+    }
+
+    // get Board that draws graphics
+    private DrawingBoard getDrawingBoardPanel() {
+        return drawingBoardPanel;
+    }
+
+
+
+
+    // new model stuff---------------------------------------------------------------------------------------------------
+    // decouple model for the controller
+
+    /*
+    * removes need for getting data from view just pass model. it auto sets all other data
+    * */
+    public void setViewStateModel(ViewStateModel model){
+       this.viewStateModel =model;
+
+       
+
+       refreshWindow();
+    }
+
+  // load view state model data
+    private void refreshViewStates(){
+        materialPanel.setLocation(viewStateModel.getMaterialLocation());
+        bottomPanel.setScaleTxt(viewStateModel.getScale());
+        materialPanel.setScale(viewStateModel.getScale());
+        materialLayers.setScale(viewStateModel.getScale());
+        drawingBoardPanel.setScale(viewStateModel.getScale());
+
+    }
+
+    public void setFileDataModel(FileDataModel fileDataModel) {
+        this.fileDataModel=fileDataModel;
+        Dimension materialDim = fileDataModel.getMaterialViewDimension();
 
 
 
@@ -208,107 +290,28 @@ public class MainView {
         materialLayers.setScale(1);
 
 
-        board.setDefaultSize(materialDim);
-        board.setSize(materialDim);
+        drawingBoardPanel.setDefaultSize(materialDim);
+        drawingBoardPanel.setSize(materialDim);
 
 
-        board.setScale(1);
+        drawingBoardPanel.setScale(1);
 
 
-        material.setDefaultSize(materialDim.width, materialDim.height);
-        material.setScale(scale);
+        materialPanel.setDefaultSize(materialDim.width, materialDim.height);
+        materialPanel.setScale(viewStateModel.getScale());
 
 
-        int Width = workspacePanel.getWidth() / 2 - (((int) data.materialDim.getWidth() * 10) / 2);
+        int Width = workspacePanel.getWidth() / 2 - (((int) fileDataModel.getMaterialDim().getWidth() * 10) / 2);
         if (Width < 0) {
             Width = 0;
         }
 
-        material.setLocation(Width, 0);
+        materialPanel.setLocation(Width, 0);
 
-        workspacePanel.add(material);
+        workspacePanel.add(materialPanel);
         mainFrame.setVisible(true);
     }
 
-    private void zoomInOut() {
-        bottomPanel.setScaleTxt(scale);
-
-        material.setScale(scale);
-        materialLayers.setScale(scale);
-        board.setScale(scale);
-
-
-    }
-
-    //public methods
-    public double getScale() {
-        return scale;
-    }
-
-    public void setScale(double scale) {
-        this.scale = scale;
-        zoomInOut();
-    }
-
-    public JPanel getWorkspacePanel() {
-        return workspacePanel;
-    }
-
-    public ScalablePanel getMaterial() {
-        return material;
-    }
-
-    public RectangleSpanHelper getMaterialSpan() {
-        Point matP = material.getLocation();
-        Point matE = new Point(matP.x + material.getWidth(), matP.y + material.getHeight());
-
-        return new RectangleSpanHelper(matP, matE);
-    }
-
-    public Point getMaterialPos() {
-        return material.getLocation();
-    }
-
-    public boolean isPointOnMaterial(Point p) {
-        return getMaterialSpan().isPointInRectangle(p);
-    }
-
-    public void setMaterialLoc(Point p) {
-        material.setLocation(p);
-        mainFrame.refresh();
-    }
-
-
-
-
-    public void refreshWindow() {
-
-        mainFrame.refresh();
-    }
-
-
-    public Point recalcWorkspaceToMaterial(@NotNull Point p) {
-        Point matLoc = material.getLocation();
-        return new Point((p.x - (matLoc.x)), (p.y - (matLoc.y)));
-
-    }
-
-    // get Board that draws graphics
-    public DrawingBoard getBoard() {
-        return board;
-    }
-
-    // set new model for board to draw
-    public void boardSetDrawingsModel(LayerDrawingsModel model){
-        board.setDrawingsModel(model);
-        this.refreshWindow();
-    }
-
-    // get currentBoardModel
-    public LayerDrawingsModel getBoardsCurrDrawingModel(){
-
-        return  getBoard().getDrawingsModel();
-    }
 
 
 

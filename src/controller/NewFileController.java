@@ -8,7 +8,6 @@ import controller.standard.Controller;
 import model.FileDataModel;
 import model.LayersDataStorageModel;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class NewFileController extends Controller implements  NewFileCallBack{
@@ -37,14 +36,14 @@ public class NewFileController extends Controller implements  NewFileCallBack{
    public void onCreateNewFileClick(){
         FileDataModel fileDataModel =new FileDataModel();
 
-       fileDataModel.materialThickness=view2.getMaterialHeight();
-       fileDataModel.fileName= view2.getFileName();
-       fileDataModel.material= view2.getMaterialPreset();
-       fileDataModel.fullSpace=view2.startAtHome();
-      fileDataModel.materialDim=view2.getWorkspaceDim();
+       fileDataModel.setMaterialThickness(view2.getMaterialHeight());
+       fileDataModel.setFileName(view2.getFileName());
 
 
-      view.addMaterial(fileDataModel);
+      fileDataModel.setMaterialDim(view2.getWorkspaceDim());
+
+
+      view.setFileDataModel(fileDataModel);
       view.refreshWindow();
         if(view2.errorVar){return;}
 
@@ -70,7 +69,7 @@ public class NewFileController extends Controller implements  NewFileCallBack{
         LayersDataStorageModel.setFileData(data);
 
 
-        view.addMaterial(LayersDataStorageModel.getFileData());
+        view.setFileDataModel(LayersDataStorageModel.getFileData());
         view.refreshWindow();
     }
 }
